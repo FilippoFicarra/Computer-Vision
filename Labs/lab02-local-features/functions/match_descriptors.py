@@ -11,9 +11,6 @@ def ssd(desc1, desc2):
     - distances:    - (q1, q2) numpy array storing the squared distance
     '''
     assert desc1.shape[1] == desc2.shape[1]
-    print(desc1.shape)
-    print(desc2.shape)
-
     # TODO: implement this function please
     return cdist(desc1, desc2, 'sqeuclidean')
 
