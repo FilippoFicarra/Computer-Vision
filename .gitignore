@@ -2,3 +2,13 @@
 venv
 *.png
 __pycache__
+Labs/lab2/report/report.bbl
+Labs/lab2/report/report.fdb_latexmk
+Labs/lab2/report/report.fls
+Labs/lab2/report/report.log
+Labs/lab2/report/report.out
+Labs/lab2/report/report.aux
+Labs/lab2/report/report.pdfsync
+Labs/lab2/report/report.run.xml
+Labs/lab2/report/report.synctex.gz
+Labs/lab2/report/report.toc
