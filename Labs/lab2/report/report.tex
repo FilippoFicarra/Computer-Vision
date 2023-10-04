@@ -1,36 +1,68 @@
-\documentclass[a4paper,11pt]{article}
-\usepackage[utf8]{inputenc}
-\usepackage{geometry}
-\geometry{left=4.0cm, right=4.0cm, top=4.0cm, bottom=3.5cm}
-\usepackage[onehalfspacing]{setspace}
-\usepackage{graphicx}
-\usepackage{tabularx}
+% !TeX root = handin.tex
+\documentclass{ETHExercise}
 \usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
 \usepackage{float}
-\newcommand{\showfontsize}{{\f@size pt}}
+\usepackage{subfig}
+\usepackage{adjustbox}
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{capt-of}
+\usepackage{tabularx}
 
-\title{Project}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[L]{course-code Semester-code / Assignment}
+\fancyfoot[C]{\thepage}
+\fancyfoot[R]{Computer Science\\ETH Zürich}
+\renewcommand{\footrulewidth}{0.05pt}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrule}{\hrule width\textwidth height\footrulewidth \vskip 2pt}
 
-\author{Filippo Ficarra}
-% \date{} % Remove the date
+\usepackage{mdframed}
+\usepackage{etoolbox}
 
+\newtoggle{showA}
+\toggletrue{showA}
+
+\newenvironment{answer}{
+  \begin{mdframed}[linewidth=1pt,linecolor=black!30,backgroundcolor=white]\iftoggle{showA}{\textbf{A:}}{}}{
+  \end{mdframed}
+}
+
+\renewcommand{\thesubfigure}{\roman{subfigure}}
+
+
+\hypersetup{colorlinks,urlcolor=blue}
+\lstset{
+  backgroundcolor=\color{lightgray!20},
+  basicstyle=\small\ttfamily,
+  keywordstyle=\color{blue}\ttfamily,
+  language=C,
+  numbers=left,
+  stepnumber=1,
+  tabsize=4,
+  showspaces=false,
+  showstringspaces=false,
+}
+\title{Homework 1}
 
 \begin{document}
-\maketitle
 
-\pagenumbering{Roman}
 
-\renewcommand{\contentsname}{Summary}
+\lectureheader{Prof. Professor}
+{}
+{\Large Course}{Semester}
+\begin{center}
+    {\Huge Filippo Ficarra: Homework }\\
+      \quad\newline
+      fficarra@student.ethz.ch, 22--938--062.\\
+      \quad\newline
+\end{center}
 
-\tableofcontents
 
-\newpage
-\pagenumbering{arabic}
-
-\section{Harris Corner Detection}
-\subsection{Sub}
-
-\section{Descriptor matching}
-\subsection{Sub}
 
 \end{document}
