@@ -15,6 +15,8 @@
 \usepackage{amsmath}
 \usepackage{datetime}
 \usepackage{listings}
+\usepackage{subcaption}
+
 
 
 \pagestyle{fancy}
@@ -33,12 +35,8 @@
 \newtoggle{showA}
 \toggletrue{showA}
 
-\newenvironment{answer}{
-  \begin{mdframed}[linewidth=1pt,linecolor=black!30,backgroundcolor=white]\iftoggle{showA}{\textbf{A:}}{}}{
-  \end{mdframed}
-}
 
-\renewcommand{\thesubfigure}{\roman{subfigure}}
+
 
 
 \hypersetup{colorlinks,urlcolor=blue}
@@ -195,5 +193,119 @@ and then we can reuse the components derived above:
 
 In order to detect corners we need just to compare every entry of
 the response with a threshold and perform non-maximum suppression.
+A non-maximum suppression process allows selecting a unique feature in each neighborhood.
+
+This has been performed in python like this:
+
+\begin{lstlisting}[language=Python, caption=Local auto-correlation matrix elements]
+  corners = np.argwhere((C > thresh) & (C == ndimage.maximum_filter(C, (3,3))))
+  corners = corners[:, [1, 0]] # convention row = y, column = x
+\end{lstlisting}
+
+
+\subsection{Results}
+In this section I'll show the result of the detection for the different parameters Sigma (Gaussian Blur),
+k (Response function) and the threshold.
+
+As expected, when one decreases the threshold, the number of corners detected is greater but not so accurate.
+
+\begin{figure}[!htb]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.04_sigma_0.5_t_0.0001_keypoints_5.png}
+  \caption{k = 0.04, sigma = 0.5, t = 1e-4 and keypoints = 5}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.04_sigma_0.5_t_5e-05_keypoints_13.png}
+  \caption{k = 0.04, sigma = 0.5, t = 5e-5 and keypoints = 13}
+\endminipage\hfill
+\minipage{0.32\textwidth}%
+  \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.04_sigma_0.5_t_1e-05_keypoints_34.png}
+  \caption{k = 0.04, sigma = 0.5, t = 1e-5 and keypoints = 34}
+\endminipage\hfill
+\minipage{0.32\textwidth}%
+  \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.04_sigma_0.5_t_5e-06_keypoints_46.png}
+  \caption{k = 0.04, sigma = 0.5, t = 5e-6 and keypoints = 46}
+\endminipage\space\space\space 
+\minipage{0.32\textwidth}%
+  \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.04_sigma_0.5_t_1e-06_keypoints_127.png}
+  \caption{k = 0.04, sigma = 0.5, t = 1e-6 and keypoints = 127}
+\endminipage
+\end{figure}
+\begin{figure}
+  \minipage{0.32\textwidth}
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.04_sigma_0.5_t_0.0001_keypoints_23.png}
+    \caption{k = 0.04, sigma = 0.5, t = 1e-4 and keypoints = 23}
+  \endminipage\hfill
+  \minipage{0.32\textwidth}
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.04_sigma_0.5_t_5e-05_keypoints_51.png}
+    \caption{k = 0.04, sigma = 0.5, t = 5e-5 and keypoints = 51}
+  \endminipage\hfill
+  \minipage{0.32\textwidth}%
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.04_sigma_0.5_t_1e-05_keypoints_134.png}
+    \caption{k = 0.04, sigma = 0.5, t = 1e-5 and keypoints = 134}
+  \endminipage\hfill
+  \minipage{0.32\textwidth}%
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.04_sigma_0.5_t_5e-06_keypoints_173.png}
+    \caption{k = 0.04, sigma = 0.5, t = 5e-6 and keypoints = 173}
+  \endminipage\space\space\space 
+  \minipage{0.32\textwidth}%
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.04_sigma_1.0_t_1e-06_keypoints_222.png}
+    \caption{k = 0.04, sigma = 0.5, t = 1e-6 and keypoints = 222}
+  \endminipage
+\end{figure}
+
+A greater effect was given increasing k to 0.06 with sigma 1.0 or 2.0. Increasing k reduces the
+response function so the number of points should be lower, while increasing the value of sigma
+
+\begin{figure}
+  \minipage{0.32\textwidth}
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_2.0_t_0.0001_keypoints_8.png}
+    \caption{k = 0.06, sigma = 2.0, t = 1e-4 and keypoints = 8}
+  \endminipage\hfill
+  \minipage{0.32\textwidth}
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_2.0_t_5e-05_keypoints_18.png}
+    \caption{k = 0.06, sigma = 2.0, t = 5e-5 and keypoints = 18}
+  \endminipage\hfill
+  \minipage{0.32\textwidth}%
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_2.0_t_1e-05_keypoints_41.png}
+    \caption{k = 0.06, sigma = 2.0, t = 1e-5 and keypoints = 41}
+  \endminipage\hfill
+  \minipage{0.32\textwidth}%
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_2.0_t_5e-06_keypoints_50.png}
+    \caption{k = 0.06, sigma = 2.0, t = 5e-6 and keypoints = 50}
+  \endminipage\space\space\space 
+  \minipage{0.32\textwidth}%
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_2.0_t_1e-06_keypoints_79.png}
+    \caption{k = 0.06, sigma = 2.0, t = 1e-6 and keypoints = 79}
+  \endminipage
+\end{figure}
+\begin{figure}
+    \minipage{0.32\textwidth}
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_0.5_t_0.0001_keypoints_19.png}
+      \caption{k = 0.06, sigma = 2.0, t = 1e-4 and keypoints = 19}
+    \endminipage\hfill
+    \minipage{0.32\textwidth}
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_0.5_t_5e-05_keypoints_42.png}
+      \caption{k = 0.06, sigma = 2.0, t = 5e-5 and keypoints = 42}
+    \endminipage\hfill
+    \minipage{0.32\textwidth}%
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_0.5_t_1e-05_keypoints_115.png}
+      \caption{k = 0.06, sigma = 2.0, t = 1e-5 and keypoints = 115}
+    \endminipage\hfill
+    \minipage{0.32\textwidth}%
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_0.5_t_5e-06_keypoints_154.png}
+      \caption{k = 0.06, sigma = 2.0, t = 5e-6 and keypoints = 154}
+    \endminipage\space\space\space 
+    \minipage{0.32\textwidth}%
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_1.0_t_1e-06_keypoints_191.png}
+      \caption{k = 0.06, sigma = 2.0, t = 1e-6 and keypoints = 191}
+    \endminipage
+  \end{figure}
+
+
+\newpage
+\section{Matching}
+
+The evaluation was done with these parameters $HARRIS_SIGMA = 1.0, HARRIS_K = 0.05 \text{and} HARRIS_THRESH = 1e-5$
 
 \end{document}
