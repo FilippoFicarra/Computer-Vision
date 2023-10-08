@@ -139,8 +139,61 @@ This convolutions have been done in python in the following way:
   I_y = signal.convolve2d(img, filter_y, mode='same')
 \end{lstlisting}
 
-\subsection{title}
+\subsection{Gaussian blur and local-auto correlation matrix}
 
+The next step is to introduce blur in the image to make the detection 
+more robust. Applying a Gaussian Blur filter prior to performing corner 
+detection serves the purpose of decreasing image noise, thereby enhancing 
+the outcome of corner-detection. 
 
+To do so we use a gaussian kernel $g$, thus the matrix M is 
+the following:
+\begin{center}
+  $M = g * \begin{bmatrix}
+    I_x^2 & I_xI_y\\
+    I_xI_y & I_y^2
+  \end{bmatrix}$
+\end{center}
+
+Furthermore to compute the response function C we will need just this 3 elements:
+\begin{lstlisting}[language=Python, caption=Local auto-correlation matrix elements]
+  I_xx_blur = cv2.GaussianBlur(I_x**2,(5,5),sigma,borderType=cv2.BORDER_REPLICATE)
+
+  I_yy_blur = cv2.GaussianBlur(I_y**2,(5,5),sigma,borderType=cv2.BORDER_REPLICATE)
+
+  I_xy_blur = cv2.GaussianBlur(I_x*I_y,(5,5),sigma,borderType=cv2.BORDER_REPLICATE)
+
+  # 3. Compute elements of the local auto-correlation matrix "M"
+
+  g_xx = I_xx_blur
+  g_yy = I_yy_blur
+  g_xy = I_xy_blur
+\end{lstlisting}
+
+\subsection{Harris response and corner detection}
+The Harris detector uses the following function to score
+the presence of corners:
+\begin{center}
+  $C = \lambda_1 \lambda_2 - k (\lambda_1 + \lambda_2)^2 = \det(M) - k (trace(M))^2$
+\end{center}
+therefore if
+\begin{itemize}
+  \item $\lambda_1 \sim 0$ and $\lambda_2 \sim 0 \implies C \ll 0$ and the region is flat,
+   since the intensity of the pixels doesn't really change in that region
+  \item $\lambda_2 \gg \lambda_1 \implies C < 0$ and we detect an horizontal edge
+  \item $\lambda_1 \gg \lambda_2 \implies C < 0$ and we detect a vertica edge
+  \item $\lambda_1 \sim \lambda_2$ and both large, $\implies C > 0$ and we detect a corner
+\end{itemize}
+Alternatively to use $\det(M)$ and $trace(M)$, we can rewrite the response function like this:
+\begin{center}
+  $C = g(I_x^2)g(I_y^2)- [g(I_x I_y)]^2 - k[ g(I_x^2)+g(I_y^2)]^2$
+\end{center}
+and then we can reuse the components derived above:
+\begin{lstlisting}[language=Python, caption=Harris response function]
+  C = (g_xx * g_yy - (g_xy**2) - k * (g_xx + g_yy)**2)
+\end{lstlisting}
+
+In order to detect corners we need just to compare every entry of
+the response with a threshold and perform non-maximum suppression.
 
 \end{document}
