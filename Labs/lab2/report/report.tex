@@ -197,7 +197,7 @@ A non-maximum suppression process allows selecting a unique feature in each neig
 
 This has been performed in python like this:
 
-\begin{lstlisting}[language=Python, caption=Local auto-correlation matrix elements]
+\begin{lstlisting}[language=Python, caption=corners]
   corners = np.argwhere((C > thresh) & (C == ndimage.maximum_filter(C, (3,3))))
   corners = corners[:, [1, 0]] # convention row = y, column = x
 \end{lstlisting}
@@ -208,6 +208,12 @@ In this section I'll show the result of the detection for the different paramete
 k (Response function) and the threshold.
 
 As expected, when one decreases the threshold, the number of corners detected is greater but not so accurate.
+Increasing the value of k reduces the number of points since the response function gets smaller as shown in the first two pairs of 
+images (here every parameter is fixed and k = = 0.04 and k = 0.06). Increasing k we will
+detect less edges, but also real corners. 
+Furthermore also increasing the sigma should reduce the number of points, as shown in the house image,
+since the image has been smoothed. It can happen though that the nois level is already high in the image and therefore increasing the
+blurring can help to find more corners, as shown in the blocks image below (sigma = 0.5 and sigma = 2.0). 
 
 \begin{figure}[!htb]
 \minipage{0.32\textwidth}
@@ -233,6 +239,28 @@ As expected, when one decreases the threshold, the number of corners detected is
 \end{figure}
 \begin{figure}
   \minipage{0.32\textwidth}
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_0.5_t_0.0001_keypoints_4.png}
+    \caption{k = 0.06, sigma = 0.5, t = 1e-4 and keypoints = 4}
+  \endminipage\hfill
+  \minipage{0.32\textwidth}
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_0.5_t_5e-05_keypoints_10.png}
+    \caption{k = 0.06, sigma = 0.5, t = 5e-5 and keypoints = 10}
+  \endminipage\hfill
+  \minipage{0.32\textwidth}%
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_0.5_t_1e-05_keypoints_28.png}
+    \caption{k = 0.06, sigma = 0.5, t = 1e-5 and keypoints = 28}
+  \endminipage\hfill
+  \minipage{0.32\textwidth}%
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_0.5_t_5e-06_keypoints_37.png}
+    \caption{k = 0.06, sigma = 0.5, t = 5e-6 and keypoints = 37}
+  \endminipage\space\space\space 
+  \minipage{0.32\textwidth}%
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_0.5_t_1e-06_keypoints_86.png}
+    \caption{k = 0.06, sigma = 0.5, t = 1e-6 and keypoints = 86}
+  \endminipage
+\end{figure}
+\begin{figure}
+  \minipage{0.32\textwidth}
     \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.04_sigma_0.5_t_0.0001_keypoints_23.png}
     \caption{k = 0.04, sigma = 0.5, t = 1e-4 and keypoints = 23}
   \endminipage\hfill
@@ -253,9 +281,54 @@ As expected, when one decreases the threshold, the number of corners detected is
     \caption{k = 0.04, sigma = 0.5, t = 1e-6 and keypoints = 222}
   \endminipage
 \end{figure}
+ 
 
-A greater effect was given increasing k to 0.06 with sigma 1.0 or 2.0. Increasing k reduces the
-response function so the number of points should be lower, while increasing the value of sigma
+  \begin{figure}
+    \minipage{0.32\textwidth}
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_0.5_t_0.0001_keypoints_19.png}
+      \caption{k = 0.06, sigma = 0.5, t = 1e-4 and keypoints = 19}
+    \endminipage\hfill
+    \minipage{0.32\textwidth}
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_0.5_t_5e-05_keypoints_42.png}
+      \caption{k = 0.06, sigma = 0.5, t = 5e-5 and keypoints = 42}
+    \endminipage\hfill
+    \minipage{0.32\textwidth}%
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_0.5_t_1e-05_keypoints_115.png}
+      \caption{k = 0.06, sigma = 0.5, t = 1e-5 and keypoints = 115}
+    \endminipage\hfill
+    \minipage{0.32\textwidth}%
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_0.5_t_5e-06_keypoints_154.png}
+      \caption{k = 0.06, sigma = 0.5, t = 5e-6 and keypoints = 154}
+    \endminipage\space\space\space 
+    \minipage{0.32\textwidth}%
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_1.0_t_1e-06_keypoints_191.png}
+      \caption{k = 0.06, sigma = 0.5, t = 1e-6 and keypoints = 191}
+    \endminipage
+\end{figure}
+
+\begin{figure}
+  \minipage{0.32\textwidth}
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_0.5_t_0.0001_keypoints_4.png}
+    \caption{k = 0.06, sigma = 0.5, t = 1e-4 and keypoints = 4}
+  \endminipage\hfill
+  \minipage{0.32\textwidth}
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_0.5_t_5e-05_keypoints_10.png}
+    \caption{k = 0.06, sigma = 0.5, t = 5e-5 and keypoints = 10}
+  \endminipage\hfill
+  \minipage{0.32\textwidth}%
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_0.5_t_1e-05_keypoints_28.png}
+    \caption{k = 0.06, sigma = 0.5, t = 1e-5 and keypoints = 28}
+  \endminipage\hfill
+  \minipage{0.32\textwidth}%
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_0.5_t_5e-06_keypoints_37.png}
+    \caption{k = 0.06, sigma = 0.5, t = 5e-6 and keypoints = 37}
+  \endminipage\space\space\space 
+  \minipage{0.32\textwidth}%
+    \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/blocks_harris_k_0.06_sigma_0.5_t_1e-06_keypoints_86.png}
+    \caption{k = 0.06, sigma = 0.5, t = 1e-6 and keypoints = 86}
+  \endminipage
+\end{figure}
+
 
 \begin{figure}
   \minipage{0.32\textwidth}
@@ -282,30 +355,125 @@ response function so the number of points should be lower, while increasing the 
 \begin{figure}
     \minipage{0.32\textwidth}
       \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_0.5_t_0.0001_keypoints_19.png}
-      \caption{k = 0.06, sigma = 2.0, t = 1e-4 and keypoints = 19}
+      \caption{k = 0.06, sigma = 0.5, t = 1e-4 and keypoints = 19}
     \endminipage\hfill
     \minipage{0.32\textwidth}
       \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_0.5_t_5e-05_keypoints_42.png}
-      \caption{k = 0.06, sigma = 2.0, t = 5e-5 and keypoints = 42}
+      \caption{k = 0.06, sigma = 0.5, t = 5e-5 and keypoints = 42}
     \endminipage\hfill
     \minipage{0.32\textwidth}%
       \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_0.5_t_1e-05_keypoints_115.png}
-      \caption{k = 0.06, sigma = 2.0, t = 1e-5 and keypoints = 115}
+      \caption{k = 0.06, sigma = 0.5, t = 1e-5 and keypoints = 115}
     \endminipage\hfill
-    \minipage{0.32\textwidth}%
-      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_0.5_t_5e-06_keypoints_154.png}
-      \caption{k = 0.06, sigma = 2.0, t = 5e-6 and keypoints = 154}
+    \minipage{0.32\textwidth}
+     \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_0.5_t_5e-06_keypoints_154.png}
+      \caption{k = 0.06, sigma = 0.5, t = 5e-6 and keypoints = 154}
     \endminipage\space\space\space 
     \minipage{0.32\textwidth}%
-      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_1.0_t_1e-06_keypoints_191.png}
-      \caption{k = 0.06, sigma = 2.0, t = 1e-6 and keypoints = 191}
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_0.5_t_1e-06_keypoints_262.png}
+      \caption{k = 0.06, sigma = 0.5, t = 1e-6 and keypoints = 262}
+    \endminipage
+  \end{figure}
+\begin{figure}
+    \minipage{0.32\textwidth}
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_2.0_t_0.0001_keypoints_26.png}
+      \caption{k = 0.06, sigma = 2.0, t = 1e-4 and keypoints = 26}
+    \endminipage\hfill
+    \minipage{0.32\textwidth}
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_2.0_t_5e-05_keypoints_53.png}
+      \caption{k = 0.06, sigma = 2.0, t = 5e-5 and keypoints = 53}
+    \endminipage\hfill
+    \minipage{0.32\textwidth}%
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_2.0_t_1e-05_keypoints_103.png}
+      \caption{k = 0.06, sigma = 2.0, t = 1e-5 and keypoints = 103}
+    \endminipage\hfill
+    \minipage{0.32\textwidth}%
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_2.0_t_5e-06_keypoints_115.png}
+      \caption{k = 0.06, sigma = 2.0, t = 5e-6 and keypoints = 115}
+    \endminipage\space\space\space 
+    \minipage{0.32\textwidth}%
+      \includegraphics[width=\linewidth]{../lab02-local-features/results/harris_corner_detection/house_harris_k_0.06_sigma_2.0_t_1e-06_keypoints_144.png}
+      \caption{k = 0.06, sigma = 2.0, t = 1e-6 and keypoints = 144}
     \endminipage
   \end{figure}
 
 
 \newpage
-\section{Matching}
+\section{Match descriptors}
+The evaluation was done with these parameters
+\begin{lstlisting}[language=Python, caption=parameters used to match descriptors]
+  HARRIS_SIGMA = 1.0
+  HARRIS_K = 0.05
+  HARRIS_THRESH = 1e-5
+\end{lstlisting}
 
-The evaluation was done with these parameters $HARRIS_SIGMA = 1.0, HARRIS_K = 0.05 \text{and} HARRIS_THRESH = 1e-5$
+\subsection{Filter keypoints}
+The function to extract descriptors was already given, we needed to filter the keypoints 
+found with the method above. Filtering in this case means to remove the points on the border of the image.
+The code is the following
+\begin{lstlisting}[language=Python, caption=filter keypoints]
+  def filter_keypoints(img, keypoints, patch_size = 9):
+    '''
+    Inputs:
+    - keypoints:    (q, 2) numpy array of keypoint locations [x, y]
+    Returns:
+    - keypoints:    (q', 2) numpy array of keypoint locations [x, y] 
+                    that are far enough from edges
+    '''
+    keypoints = keypoints[(keypoints[:, 0] > patch_size // 2) 
+                          & (keypoints[:, 0] < img.shape[1] - patch_size // 2) 
+                          & (keypoints[:, 1] > patch_size // 2) 
+                          & (keypoints[:, 1] < img.shape[0] - patch_size // 2)]
+    
+    return keypoints
+\end{lstlisting}
+\subsection{SSD}
+Next, to match descriptors, we need to compute the distances between them.
+The smaller the distance, the more correlated the keypoints in two images are.
+This can be done with cdist function in scipy.spatial.distance. 
+\begin{lstlisting}[language=Python, caption=SSD]
+def ssd(desc1, desc2):
+    '''
+    Sum of squared differences
+    Inputs:
+    - desc1:        - (q1, feature_dim) descriptor for the first image
+    - desc2:        - (q2, feature_dim) descriptor for the first image
+    Returns:
+    - distances:    - (q1, q2) numpy array storing the squared distance
+    '''
+    assert desc1.shape[1] == desc2.shape[1]
+    return cdist(desc1, desc2, 'sqeuclidean')
+  \end{lstlisting}
+
+  The output of the function is for every descriptor in the first image,
+  the distance with every descriptor in the second image
+  \begin{center}
+    $dist[i,j] = \sum\limits_{k = 1}^{\text{feature\_dim}} (desc1[i, k] - desc2[j, k])^2$
+  \end{center}
+
+\subsection{One way matching}
+One way matching aims to find for each descriptor in the first image, the correspondent 
+descriptor with lower distance in the second image.
+
+\begin{lstlisting}[language=Python, caption=One way matching]
+  if method == "one_way": # Query the nearest neighbor for each keypoint in image 1
+        matches = np.argmin(distances, axis=1)
+        matches = np.array([(i, match) for i, match in enumerate(matches)])
+\end{lstlisting}
+
+The following image show the result
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=1\textwidth]{../lab02-local-features/results/matching/match_ow.png}
+  \caption{One way matching}
+\end{figure}
+
+As the figure shows, the one way is not very accurate since it 
+catch some matching that are not correct (this is shown by the crossing connections).
+
+\subsection{Mutual matching}
+
+  
 
 \end{document}
