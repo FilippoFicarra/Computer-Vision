@@ -25,8 +25,12 @@ def extract_harris(img, sigma = 1.0, k = 0.05, thresh = 1e-5):
     # You may refer to scipy.signal.convolve2d for the convolution.
     # Do not forget to use the mode "same" to keep the image size unchanged.
 
-    filter_x = np.array([[-1/2, 0, 1/2]])
-    filter_y = np.array([[-1/2],[0],[1/2]])
+    filter_x = np.array([[1/2, 0, -1/2]])
+    filter_y = np.array([[1/2],[0],[-1/2]])
+
+    print(filter_x)
+    print(filter_y)
+
 
     I_x = signal.convolve2d(img, filter_x, mode='same')
     I_y = signal.convolve2d(img, filter_y, mode='same')
