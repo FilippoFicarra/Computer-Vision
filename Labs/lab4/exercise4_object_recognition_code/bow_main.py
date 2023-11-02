@@ -81,12 +81,14 @@ def descriptors_hog(img, vPoints, cellWidth, cellHeight):
                 # compute the angles
                 # compute the histogram
                 
-                mag, angle = cv2.cartToPolar(grad_x[start_y:end_y, start_x:end_x], grad_y[start_y:end_y, start_x:end_x], angleInDegrees=True)
+                mag = np.sqrt(grad_x[start_y:end_y, start_x:end_x] ** 2 + grad_y[start_y:end_y, start_x:end_x] ** 2)  
+                angle = np.arctan2(grad_y[start_y:end_y, start_x:end_x], grad_x[start_y:end_y, start_x:end_x]) * 180 / np.pi 
                 
-                
-                
-
-            descriptors.append(desc)
+                hist, _ = np.histogram(angle, bins=nBins, range=(-180, 180), weights=mag)
+                desc.append(hist)
+                        
+        desc = np.asarray(desc).reshape(-1)
+        descriptors.append(desc)
 
     descriptors = np.asarray(descriptors) # [nPointsX*nPointsY, 128], descriptor for the current image (100 grid points)
     return descriptors
@@ -122,7 +124,9 @@ def create_codebook(nameDirPos, nameDirNeg, k, numiter):
 
         # Collect local feature points for each image, and compute a descriptor for each local feature point
         # todo
-        ...
+        grid = grid_points(img, nPointsX, nPointsY, border)
+        descriptors = descriptors_hog(img, grid, cellWidth, cellHeight)
+        vFeatures.append(descriptors)
 
 
     vFeatures = np.asarray(vFeatures)  # [n_imgs, n_vPoints, 128]
@@ -214,36 +218,38 @@ if __name__ == '__main__':
     nameDirNeg_train = 'data/data_bow/cars-training-neg'
     nameDirPos_test = 'data/data_bow/cars-testing-pos'
     nameDirNeg_test = 'data/data_bow/cars-testing-neg'
+     
+    
   
-    k = None  # todo
+    k = 20  # todo
     numiter = None  # todo
 
     print('creating codebook ...')
     vCenters = create_codebook(nameDirPos_train, nameDirNeg_train, k, numiter)
 
-    print('creating bow histograms (pos) ...')
-    vBoWPos = create_bow_histograms(nameDirPos_train, vCenters)
-    print('creating bow histograms (neg) ...')
-    vBoWNeg = create_bow_histograms(nameDirNeg_train, vCenters)
+    # print('creating bow histograms (pos) ...')
+    # vBoWPos = create_bow_histograms(nameDirPos_train, vCenters)
+    # print('creating bow histograms (neg) ...')
+    # vBoWNeg = create_bow_histograms(nameDirNeg_train, vCenters)
 
-    # test pos samples
-    print('creating bow histograms for test set (pos) ...')
-    vBoWPos_test = create_bow_histograms(nameDirPos_test, vCenters)  # [n_imgs, k]
-    result_pos = 0
-    print('testing pos samples ...')
-    for i in range(vBoWPos_test.shape[0]):
-        cur_label = bow_recognition_nearest(vBoWPos_test[i:(i+1)], vBoWPos, vBoWNeg)
-        result_pos = result_pos + cur_label
-    acc_pos = result_pos / vBoWPos_test.shape[0]
-    print('test pos sample accuracy:', acc_pos)
+    # # test pos samples
+    # print('creating bow histograms for test set (pos) ...')
+    # vBoWPos_test = create_bow_histograms(nameDirPos_test, vCenters)  # [n_imgs, k]
+    # result_pos = 0
+    # print('testing pos samples ...')
+    # for i in range(vBoWPos_test.shape[0]):
+    #     cur_label = bow_recognition_nearest(vBoWPos_test[i:(i+1)], vBoWPos, vBoWNeg)
+    #     result_pos = result_pos + cur_label
+    # acc_pos = result_pos / vBoWPos_test.shape[0]
+    # print('test pos sample accuracy:', acc_pos)
 
-    # test neg samples
-    print('creating bow histograms for test set (neg) ...')
-    vBoWNeg_test = create_bow_histograms(nameDirNeg_test, vCenters)  # [n_imgs, k]
-    result_neg = 0
-    print('testing neg samples ...')
-    for i in range(vBoWNeg_test.shape[0]):
-        cur_label = bow_recognition_nearest(vBoWNeg_test[i:(i + 1)], vBoWPos, vBoWNeg)
-        result_neg = result_neg + cur_label
-    acc_neg = 1 - result_neg / vBoWNeg_test.shape[0]
-    print('test neg sample accuracy:', acc_neg)
+    # # test neg samples
+    # print('creating bow histograms for test set (neg) ...')
+    # vBoWNeg_test = create_bow_histograms(nameDirNeg_test, vCenters)  # [n_imgs, k]
+    # result_neg = 0
+    # print('testing neg samples ...')
+    # for i in range(vBoWNeg_test.shape[0]):
+    #     cur_label = bow_recognition_nearest(vBoWNeg_test[i:(i + 1)], vBoWPos, vBoWNeg)
+    #     result_neg = result_neg + cur_label
+    # acc_neg = 1 - result_neg / vBoWNeg_test.shape[0]
+    # print('test neg sample accuracy:', acc_neg)
