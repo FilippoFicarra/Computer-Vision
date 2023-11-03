@@ -4,6 +4,12 @@ import glob
 import os
 from sklearn.cluster import KMeans
 from tqdm import tqdm
+from sklearn.metrics import silhouette_score
+
+import warnings
+
+
+
 
 
 def findnn(D1, D2):
@@ -136,7 +142,6 @@ def create_codebook(nameDirPos, nameDirNeg, k, numiter):
     vFeatures = vFeatures.reshape(-1, vFeatures.shape[-1])  # [n_imgs*n_vPoints, 128]
     print('number of extracted features: ', len(vFeatures))
 
-
     # Cluster the features using K-Means
     print('clustering ...')
     kmeans_res = KMeans(n_clusters=k, max_iter=numiter).fit(vFeatures)
@@ -232,7 +237,7 @@ if __name__ == '__main__':
      
     
   
-    k = 30  # todo
+    k = 200  # todo
     numiter = 300  # todo
 
     print('creating codebook ...')
