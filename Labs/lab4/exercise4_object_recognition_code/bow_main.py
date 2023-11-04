@@ -9,13 +9,18 @@ import matplotlib.pyplot as plt
 
 
 def plot(pos_acc, neg_acc, ks):
-    plt.plot(ks, pos_acc, label="pos")
-    plt.plot(ks, neg_acc, label="neg")
+    plt.plot(ks, pos_acc, label="pos", color="red")
+    plt.plot(ks, neg_acc, label="neg", color="blue")
+
+    plt.plot(ks, pos_acc, 'o', color="red")
+    plt.plot(ks, neg_acc, 'o', color="blue")
+
+    
     plt.legend()
     plt.xlabel("k")
     plt.ylabel("accuracy")
     i = len([file for file in os.listdir(".") if file.startswith("pos_neg_")])
-    plt.savefig(f"pos_neg_{i}.png")
+    plt.savefig(f"pos_neg_{i+1}.png")
 
 
 def findnn(D1, D2):
@@ -58,10 +63,11 @@ def grid_points(img, nPointsX, nPointsY, border):
     image_height = img.shape[0]
     image_width = img.shape[1]
     
-    grid_width = (image_width - 2 * border -1) // (nPointsX - 1)
-    grid_height = (image_height - 2 * border -1) // (nPointsY - 1)
+    x_p = np.linspace(border, image_width - border, nPointsX, dtype=int)
+    y_p = np.linspace(border, image_height - border, nPointsY, dtype=int)
     
-    vPoints = np.array([(border + i * grid_height, border + j * grid_width) for i in range(nPointsX) for j in range(nPointsY)])
+    vPoints = np.array([(x, y) for x in x_p for y in y_p])
+    
     
     return vPoints
 
@@ -92,15 +98,9 @@ def descriptors_hog(img, vPoints, cellWidth, cellHeight):
                 # todo
                 # compute the angles
                 # compute the histogram
-                
-                g_x = np.array(grad_x[start_x:end_x, start_y:end_y], dtype=np.float32)
-                g_y = np.array(grad_y[start_x:end_x, start_y:end_y], dtype=np.float32)
-                
     
-                mag, angle = cv2.cartToPolar(g_x, g_y, angleInDegrees=True)
-                
-                            
-                hist, _ = np.histogram(angle, bins=nBins, range=(0, 180))
+                angle = np.arctan2(grad_y[start_x:end_x, start_y:end_y], grad_x[start_x:end_x, start_y:end_y])  * 180 / np.pi           
+                hist, _ = np.histogram(angle, bins=nBins, range=(-180, 180))
                 desc.append(hist)
                         
         desc = np.asarray(desc).reshape(-1)
@@ -151,7 +151,7 @@ def create_codebook(nameDirPos, nameDirNeg, k, numiter):
 
     # Cluster the features using K-Means
     print('clustering ...')
-    kmeans_res = KMeans(n_clusters=k, max_iter=numiter).fit(vFeatures)
+    kmeans_res = KMeans(n_clusters=k, max_iter=numiter, random_state=42).fit(vFeatures)
     vCenters = kmeans_res.cluster_centers_  # [k, 128]
     return vCenters
 
@@ -162,14 +162,10 @@ def bow_histogram(vFeatures, vCenters):
     :param vCenters: NxD matrix containing N cluster centers of dim. D
     :return: histo: N-dim. numpy vector containing the resulting BoW activation histogram.
     """
-    histo = []
-    
-    for feature in vFeatures:
-        Idx, _ = findnn(feature.reshape(1, -1), vCenters)
-        hist, _ = np.histogram(Idx, bins=len(vCenters), range=(0, len(vCenters)))
-        histo.append(hist)
-    
-    histo = np.asarray(histo)
+
+    Idx, _ = findnn(vFeatures, vCenters)
+    histo, _ = np.histogram(Idx, bins=vCenters.shape[0])
+
     return histo
 
 
@@ -244,47 +240,47 @@ if __name__ == '__main__':
      
     
   
-    k = 100   # todo
+    # k = 200   # todo
     numiter = 300  # todo
-    ks = [10, 20, 50, 100, 120, 150, 200, 250, 300, 400]
+    ks = range(10, 200, 20) # [200]
     
     pos_acc = []
     neg_acc = []
     
-    # for k in tqdm(ks):
-    print('k = ', k)
-    print('creating codebook ...')
-    vCenters = create_codebook(nameDirPos_train, nameDirNeg_train, k, numiter)
+    for k in tqdm(ks):
+        print('k = ', k)
+        print('creating codebook ...')
+        vCenters = create_codebook(nameDirPos_train, nameDirNeg_train, k, numiter)
 
-    print('creating bow histograms (pos) ...')
-    vBoWPos = create_bow_histograms(nameDirPos_train, vCenters)
-    print('creating bow histograms (neg) ...')
-    vBoWNeg = create_bow_histograms(nameDirNeg_train, vCenters)
+        print('creating bow histograms (pos) ...')
+        vBoWPos = create_bow_histograms(nameDirPos_train, vCenters)
+        print('creating bow histograms (neg) ...')
+        vBoWNeg = create_bow_histograms(nameDirNeg_train, vCenters)
 
-    # test pos samples
-    print('creating bow histograms for test set (pos) ...')
-    vBoWPos_test = create_bow_histograms(nameDirPos_test, vCenters)  # [n_imgs, k]
-    result_pos = 0
-    print('testing pos samples ...')
-    for i in range(vBoWPos_test.shape[0]):
-        cur_label = bow_recognition_nearest(vBoWPos_test[i:(i+1)], vBoWPos, vBoWNeg)
-        result_pos = result_pos + cur_label
-    acc_pos = result_pos / vBoWPos_test.shape[0]
-    print('test pos sample accuracy:', acc_pos)
+        # test pos samples
+        print('creating bow histograms for test set (pos) ...')
+        vBoWPos_test = create_bow_histograms(nameDirPos_test, vCenters)  # [n_imgs, k]
+        result_pos = 0
+        print('testing pos samples ...')
+        for i in range(vBoWPos_test.shape[0]):
+            cur_label = bow_recognition_nearest(vBoWPos_test[i:(i+1)], vBoWPos, vBoWNeg)
+            result_pos = result_pos + cur_label
+        acc_pos = result_pos / vBoWPos_test.shape[0]
+        print('test pos sample accuracy:', acc_pos)
 
-    # test neg samples
-    print('creating bow histograms for test set (neg) ...')
-    vBoWNeg_test = create_bow_histograms(nameDirNeg_test, vCenters)  # [n_imgs, k]
-    result_neg = 0
-    print('testing neg samples ...')
-    for i in range(vBoWNeg_test.shape[0]):
-        cur_label = bow_recognition_nearest(vBoWNeg_test[i:(i + 1)], vBoWPos, vBoWNeg)
-        result_neg = result_neg + cur_label
-    acc_neg = 1 - result_neg / vBoWNeg_test.shape[0]
-    print('test neg sample accuracy:', acc_neg)
-    
-    pos_acc.append(acc_pos)
-    neg_acc.append(acc_neg)
-    # break
-    
-    # plot(pos_acc, neg_acc, ks)
+        # test neg samples
+        print('creating bow histograms for test set (neg) ...')
+        vBoWNeg_test = create_bow_histograms(nameDirNeg_test, vCenters)  # [n_imgs, k]
+        result_neg = 0
+        print('testing neg samples ...')
+        for i in range(vBoWNeg_test.shape[0]):
+            cur_label = bow_recognition_nearest(vBoWNeg_test[i:(i + 1)], vBoWPos, vBoWNeg)
+            result_neg = result_neg + cur_label
+        acc_neg = 1 - result_neg / vBoWNeg_test.shape[0]
+        print('test neg sample accuracy:', acc_neg)
+        
+        pos_acc.append(acc_pos)
+        neg_acc.append(acc_neg)
+        # break
+        
+    plot(pos_acc, neg_acc, ks)

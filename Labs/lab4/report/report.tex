@@ -71,6 +71,29 @@
 
 \section{Bag of Words}
 \subsection{Grid}
+\subsection{Codebook}
+The book is generated gathering all the descriptors for all the sub images 
+taken from the grid of all images and clusterizing them using the K-means cluster
+algorithm. The code was already implemented and the following code
+was added:
+\begin{lstlisting}[language=Python, caption=Codebook Generation]
+  grid = grid_points(img, nPointsX, nPointsY, border)
+  descriptors = descriptors_hog(img, grid, cellWidth, cellHeight)
+  vFeatures.append(descriptors)
+\end{lstlisting}
+
+\subsection{Bag-of-Words histogram}
+In the function create\_bow\_histograms() we compute for the descriptors of all the images 
+the histogram that relates each feature to a the centroids. The function
+relies on the function bow\_histogram() function that computes the histogram of the features of an images
+with respect to the centroids.
+
+\subsection{Nearest Neighbour}
+
+The classification is done using the findnn function to find both the 
+distances of the positive BoW and the negative BoW. The smallest distance
+is the class we predict.
+
 \section{CNN-based Classifier}
 
 \subsection{Training}
