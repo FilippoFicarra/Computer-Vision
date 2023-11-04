@@ -69,22 +69,63 @@
 
 \section{Introduction}
 
-
+\section{Bag of Words}
+\subsection{Grid}
 \section{CNN-based Classifier}
 
 \subsection{Training}
+The model is a simplified version of the VGG architecture. The architecture given was
+the following:
+
 \begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.6\textwidth, height=0.15\textheight]{images/VGG.png}
+  \caption{VGG simplified architecture}
+\end{figure}
+
+The model was trained with the following parameters:
+\begin{center}
+  \begin{tabular}{|l|c|c|c|}
+    \hline
+    \textbf{Argument} & \textbf{Value} &  \textbf{Description} \\
+    \hline
+    batch\_size & 128 & Batch size \\
+    log\_step & 100 & How many steps to log once \\
+    val\_step & 100 &  Validation step \\
+    num\_epoch & 50 & Maximum number of training epochs \\
+    fc\_layer & 512 & Number of features in the first linear layer in VGG \\
+    lr & 0.0001 &  Learning rate \\
+    \hline
+  \end{tabular}
+\end{center}
+
+
+As shown in the table above the model was trained for 50 epochs with batch size 128.
+\\
+Furthermore the training has been performed on Euler with 1 gpu RTX 4090. 
+\\
+Below we can find the graphs for the train losses in which we can see that the 
+loss progressively drops from an initial value of 2 to a value around 1.3, while the validation accuracies
+pass from around 45\% to a final value of 81.92\%
+
+\begin{figure}[h]
   \centering
   \includegraphics[width=1\textwidth, height=0.22\textheight]{images/train_losses.png}
   \caption{Train Losses}
 \end{figure}
-\begin{figure}[!h]
+\begin{figure}[h]
   \centering
   \includegraphics[width=1\textwidth, height=0.22\textheight]{images/val_accuracies.png}
   \caption{Validation Accuracies}
 \end{figure}
 
+\newpage
 \subsection{Testing}
-The model trained with 50 epochs achieved a test accuracy of 80.86 on the CIFAR10 dataset.
+The model after training with 50 epochs achieved a test accuracy of 80.86 on the CIFAR10 dataset.
+The test script was run locally on cpu for convenience and gave the following output:
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.3\textwidth]{images/test_output.png}
+\end{figure}
 
 \end{document}
