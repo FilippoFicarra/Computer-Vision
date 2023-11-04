@@ -4,12 +4,18 @@ import glob
 import os
 from sklearn.cluster import KMeans
 from tqdm import tqdm
-from sklearn.metrics import silhouette_score
-
-import warnings
+import matplotlib.pyplot as plt
 
 
 
+def plot(pos_acc, neg_acc, ks):
+    plt.plot(ks, pos_acc, label="pos")
+    plt.plot(ks, neg_acc, label="neg")
+    plt.legend()
+    plt.xlabel("k")
+    plt.ylabel("accuracy")
+    i = len([file for file in os.listdir(".") if file.startswith("pos_neg_")])
+    plt.savefig(f"pos_neg_{i}.png")
 
 
 def findnn(D1, D2):
@@ -47,7 +53,7 @@ def grid_points(img, nPointsX, nPointsY, border):
     :param border: leave border pixels in each image dimension
     :return: vPoints: 2D grid point coordinates, numpy array, [nPointsX*nPointsY, 2]
     """
-    # vPoints = None  # numpy array, [nPointsX*nPointsY, 2]
+    vPoints = None  # numpy array, [nPointsX*nPointsY, 2]
         
     image_height = img.shape[0]
     image_width = img.shape[1]
@@ -55,7 +61,7 @@ def grid_points(img, nPointsX, nPointsY, border):
     grid_width = (image_width - 2 * border -1) // (nPointsX - 1)
     grid_height = (image_height - 2 * border -1) // (nPointsY - 1)
     
-    vPoints = np.array([(border + j * grid_width, border + i * grid_height) for i in range(nPointsY) for j in range(nPointsX)])
+    vPoints = np.array([(border + i * grid_height, border + j * grid_width) for i in range(nPointsX) for j in range(nPointsY)])
     
     return vPoints
 
@@ -87,13 +93,14 @@ def descriptors_hog(img, vPoints, cellWidth, cellHeight):
                 # compute the angles
                 # compute the histogram
                 
-                g_x = np.array(grad_x[start_y:end_y, start_x:end_x], dtype=np.float32)
-                g_y = np.array(grad_y[start_y:end_y, start_x:end_x], dtype=np.float32)
+                g_x = np.array(grad_x[start_x:end_x, start_y:end_y], dtype=np.float32)
+                g_y = np.array(grad_y[start_x:end_x, start_y:end_y], dtype=np.float32)
+                
     
-                mag, angle = cv2.cartToPolar(g_x, g_y)
+                mag, angle = cv2.cartToPolar(g_x, g_y, angleInDegrees=True)
                 
                             
-                hist, _ = np.histogram(angle, bins=nBins, range=(-180, 180), weights=mag)
+                hist, _ = np.histogram(angle, bins=nBins, range=(0, 180))
                 desc.append(hist)
                         
         desc = np.asarray(desc).reshape(-1)
@@ -237,9 +244,15 @@ if __name__ == '__main__':
      
     
   
-    k = 200  # todo
+    k = 100   # todo
     numiter = 300  # todo
-
+    ks = [10, 20, 50, 100, 120, 150, 200, 250, 300, 400]
+    
+    pos_acc = []
+    neg_acc = []
+    
+    # for k in tqdm(ks):
+    print('k = ', k)
     print('creating codebook ...')
     vCenters = create_codebook(nameDirPos_train, nameDirNeg_train, k, numiter)
 
@@ -269,3 +282,9 @@ if __name__ == '__main__':
         result_neg = result_neg + cur_label
     acc_neg = 1 - result_neg / vBoWNeg_test.shape[0]
     print('test neg sample accuracy:', acc_neg)
+    
+    pos_acc.append(acc_pos)
+    neg_acc.append(acc_neg)
+    # break
+    
+    # plot(pos_acc, neg_acc, ks)
