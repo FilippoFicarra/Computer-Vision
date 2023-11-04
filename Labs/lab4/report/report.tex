@@ -71,6 +71,21 @@
 
 \section{Bag of Words}
 \subsection{Grid}
+The image is divided into a grid. The grid is created with the 
+following steps:
+\begin{itemize}
+  \item leave a border on all the edges. In this case border = 8
+  \item compute the width and height of the grid 
+  \item take all the points that start from border to the image width border and analogously for the height
+  \item create an array of points from the step before
+\end{itemize}
+
+\subsection{Histogram of Oriented gradients}
+In order to extract the feature we use the HOG algorithm. The variant
+used in this exercise doesn't use the magnitudes of the gradient but just
+their orientation.
+
+TO COMPLETE
 \subsection{Codebook}
 The book is generated gathering all the descriptors for all the sub images 
 taken from the grid of all images and clusterizing them using the K-means cluster
