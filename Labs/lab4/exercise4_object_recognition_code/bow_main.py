@@ -63,11 +63,18 @@ def grid_points(img, nPointsX, nPointsY, border):
     image_height = img.shape[0]
     image_width = img.shape[1]
     
-    x_p = np.linspace(border, image_width - border, nPointsX, dtype=int)
-    y_p = np.linspace(border, image_height - border, nPointsY, dtype=int)
+    grid_width = (image_width - 2 * border -1) // (nPointsX - 1)
+    grid_height = (image_height - 2 * border -1) // (nPointsY - 1)
+
+    xs = np.arange(border, image_width - border, grid_width).tolist()
+    ys = np.arange(border, image_height - border, grid_height).tolist()
     
-    vPoints = np.array([(x, y) for x in x_p for y in y_p])
+
+    vPoints = np.array([(x, y) for x in xs for y in ys])
     
+ 
+        
+
     
     return vPoints
 
@@ -99,7 +106,7 @@ def descriptors_hog(img, vPoints, cellWidth, cellHeight):
                 # compute the angles
                 # compute the histogram
     
-                angle = np.arctan2(grad_y[start_x:end_x, start_y:end_y], grad_x[start_x:end_x, start_y:end_y])  * 180 / np.pi           
+                angle =np.arctan2(grad_y[start_x:end_x, start_y:end_y], grad_x[start_x:end_x, start_y:end_y])  * 180 / np.pi           
                 hist, _ = np.histogram(angle, bins=nBins, range=(-180, 180))
                 desc.append(hist)
                         
@@ -242,7 +249,7 @@ if __name__ == '__main__':
   
     # k = 200   # todo
     numiter = 300  # todo
-    ks = range(10, 200, 20) # [200]
+    ks = range(10, 400, 10) # [200]
     
     pos_acc = []
     neg_acc = []
