@@ -81,6 +81,7 @@ class Vgg(nn.Module):
         x = self.conv_block3(x)
         x = self.conv_block4(x)
         x = self.conv_block5(x)
+        x = x.view(x.size(0), -1)
         score = self.classifier(x)
         
         return score

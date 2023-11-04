@@ -1,6 +1,6 @@
 output=""
 
-for i in {1..20}
+for i in {1..5}
 do
     echo "Run $i"
     python bow_main.py &> temp_output.txt
