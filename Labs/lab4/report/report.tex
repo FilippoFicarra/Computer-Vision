@@ -97,7 +97,14 @@ In order to extract the feature we use the HOG algorithm. The variant
 used in this exercise doesn't use the magnitudes of the gradient but just
 their orientation.
 
-TO COMPLETE
+For each grid point specified in vPoints, the algorithm computes a HOG descriptor using the following steps:
+\begin{itemize}
+  \item It iterates over a 4x4 set of cells around the current grid point.
+  \item For each cell, it calculates the gradient orientation and computes a hog.
+  \item The histogram counts how many gradient orientations fall into each of the predefined bins (from -180 to 180 degrees, since arctan gives values in this range).
+
+
+\end{itemize}
 \subsection{Codebook}
 The book is generated gathering all the descriptors for all the sub images 
 taken from the grid of all images and clusterizing them using the K-means cluster
@@ -109,6 +116,7 @@ was added:
   vFeatures.append(descriptors)
 \end{lstlisting}
 
+We will further analyze the importance of the parameter k.
 \subsection{Bag-of-Words histogram}
 In the function create\_bow\_histograms() we compute for the descriptors of all the images 
 the histogram that relates each feature to a the centroids. The function
@@ -120,6 +128,12 @@ with respect to the centroids.
 The classification is done using the findnn function to find both the 
 distances of the positive BoW and the negative BoW. The smallest distance
 is the class we predict.
+
+\subsection{Results}
+The following results show the trend of the posistive and negative samples when the number
+of centroids vary.
+
+Insert the logging
 
 \section{CNN-based Classifier}
 
@@ -169,11 +183,10 @@ pass from around 45\% to a final value of 81.92\%
   \caption{Validation Accuracies}
 \end{figure}
 
-\newpage
 \subsection{Testing}
 The model after training with 50 epochs achieved a test accuracy of 80.86 on the CIFAR10 dataset.
 The test script was run locally on cpu for convenience and gave the following output:
-\begin{figure}[h]
+\begin{figure}[!h]
   \centering
   \includegraphics[width=0.3\textwidth]{images/test_output.png}
 \end{figure}
