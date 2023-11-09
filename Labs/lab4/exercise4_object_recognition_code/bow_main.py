@@ -66,16 +66,12 @@ def grid_points(img, nPointsX, nPointsY, border):
     grid_width = (image_width - 2 * border -1) // (nPointsX - 1)
     grid_height = (image_height - 2 * border -1) // (nPointsY - 1)
 
-    xs = np.arange(border, image_width - border, grid_width).tolist()
-    ys = np.arange(border, image_height - border, grid_height).tolist()
+    xs = np.arange(border + 1, image_width - border, grid_width).tolist()
+    ys = np.arange(border + 1, image_height - border, grid_height).tolist()
     
 
     vPoints = np.array([(x, y) for x in xs for y in ys])
-    
- 
-        
-
-    
+       
     return vPoints
 
 
@@ -106,7 +102,7 @@ def descriptors_hog(img, vPoints, cellWidth, cellHeight):
                 # compute the angles
                 # compute the histogram
     
-                angle =np.arctan2(grad_y[start_x:end_x, start_y:end_y], grad_x[start_x:end_x, start_y:end_y])  * 180 / np.pi           
+                angle = np.arctan2(grad_y[start_y:end_y, start_x:end_x], grad_x[start_y:end_y, start_x:end_x])  * 180 / np.pi           
                 hist, _ = np.histogram(angle, bins=nBins, range=(-180, 180))
                 desc.append(hist)
                         
@@ -115,7 +111,6 @@ def descriptors_hog(img, vPoints, cellWidth, cellHeight):
 
     descriptors = np.asarray(descriptors) # [nPointsX*nPointsY, 128], descriptor for the current image (100 grid points)
     return descriptors
-
 
 
 
@@ -158,7 +153,7 @@ def create_codebook(nameDirPos, nameDirNeg, k, numiter):
 
     # Cluster the features using K-Means
     print('clustering ...')
-    kmeans_res = KMeans(n_clusters=k, max_iter=numiter, random_state=42).fit(vFeatures)
+    kmeans_res = KMeans(n_clusters=k, max_iter=numiter, random_state=4).fit(vFeatures)
     vCenters = kmeans_res.cluster_centers_  # [k, 128]
     return vCenters
 
@@ -171,7 +166,7 @@ def bow_histogram(vFeatures, vCenters):
     """
 
     Idx, _ = findnn(vFeatures, vCenters)
-    histo, _ = np.histogram(Idx, bins=vCenters.shape[0])
+    histo, _ = np.histogram(Idx, bins=vCenters.shape[0], range=(0, vCenters.shape[0]-1))
 
     return histo
 
@@ -249,7 +244,7 @@ if __name__ == '__main__':
   
     # k = 200   # todo
     numiter = 300  # todo
-    ks = range(10, 400, 10) # [200]
+    ks = range(10, 250, 10) # [200]
     
     pos_acc = []
     neg_acc = []
