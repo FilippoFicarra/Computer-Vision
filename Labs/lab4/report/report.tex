@@ -69,17 +69,17 @@
 
 \section{Introduction}
 The first part of the lab focuses on image recognition in a more 
-classical way,l using a method borrowed from NLP. The Bag of word method is a 
-method for Image recognition it is adapted this way:
+classical way, using a method borrowed from NLP. The Bag of Words method for Image recognition it is adapted this way:
 \begin{itemize}
   \item Divide the images in subimages 
   \item Create a codebook of explenative images
-  \item Correlate images to the one in the codebook to classify them
+  \item Associate images to the one in the codebook to classify them
 \end{itemize}
 
 The second method uses a Deep Learning architecture to extract information
 and classify the images. This is done through the usage of a simplified
-version of the VGG architecture.
+version of the VGG architecture. This architecture is based on convolutional NN 
+usually used for image recognition.
 
 \section{Bag of Words}
 \subsection{Grid}
@@ -87,10 +87,19 @@ The image is divided into a grid. The grid is created with the
 following steps:
 \begin{itemize}
   \item leave a border on all the edges. In this case border = 8
-  \item compute the width and height of the grid 
-  \item take all the points that start from border to the image width border and analogously for the height
+  \item take all the points that start from border + 1 to the image width - border and analogously for the height
   \item create an array of points from the step before
 \end{itemize}
+
+You can see this procedure in the following snippet:
+\begin{lstlisting}[language=Python, caption=Grid creation]
+  xs = np.linspace(border+1, image_width-border, nPointsX)
+  ys = np.linspace(border+1, image_height-border, nPointsY)
+  
+  vPoints = np.array([(x, y) for x in xs for y in ys])
+\end{lstlisting}
+
+
 
 \subsection{Histogram of Oriented gradients}
 In order to extract the feature we use the HOG algorithm. The variant
@@ -100,11 +109,17 @@ their orientation.
 For each grid point specified in vPoints, the algorithm computes a HOG descriptor using the following steps:
 \begin{itemize}
   \item It iterates over a 4x4 set of cells around the current grid point.
-  \item For each cell, it calculates the gradient orientation and computes a hog.
+  \item For each cell, it calculates the gradient orientation and computes a hog. The orientation are taken in degrees.
   \item The histogram counts how many gradient orientations fall into each of the predefined bins (from -180 to 180 degrees, since arctan gives values in this range).
-
-
 \end{itemize}
+\begin{lstlisting}[language=Python, caption=HOG]
+  angle = np.arctan2(grad_y[start_y:end_y, start_x:end_x],
+                            grad_x[start_y:end_y, start_x:end_x]) * 180 / np.pi           
+  hist, _ = np.histogram(angle, bins=nBins, range=(-180, 180))
+  desc.append(hist)
+\end{lstlisting}
+
+
 \subsection{Codebook}
 The book is generated gathering all the descriptors for all the sub images 
 taken from the grid of all images and clusterizing them using the K-means cluster
@@ -116,7 +131,8 @@ was added:
   vFeatures.append(descriptors)
 \end{lstlisting}
 
-We will further analyze the importance of the parameter k.
+In the code I set a random\_state = 42 to the K-means algorithm and numiteration = 300 (default). I will show in the result the effect of different ks.
+
 \subsection{Bag-of-Words histogram}
 In the function create\_bow\_histograms() we compute for the descriptors of all the images 
 the histogram that relates each feature to a the centroids. The function
@@ -130,10 +146,31 @@ distances of the positive BoW and the negative BoW. The smallest distance
 is the class we predict.
 
 \subsection{Results}
-The following results show the trend of the posistive and negative samples when the number
-of centroids vary.
+The picture below show the trend of the posistive and negative samples when the number
+of centroids vary. It is useful to see that for little number of centroids like 5 the accuracy for the positive 
+samples is very low, while increasing the number of centrioids we can be more accurate untill a certain amount of centroids. 
+The more centroids the lower the accuracy tend to be. We can choose for example a value of k = 55, giving
+good results while keeping the complexity moderate.
 
-Insert the logging
+You can find the log of the multiple k run into the file "log\_bow\_main.txt".
+
+For the value k = 55 we have the following result:
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.4\textwidth]{../exercise4_object_recognition_code/bow_log.png}
+  \caption{BoW log}
+\end{figure}
+
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=1\textwidth]{../exercise4_object_recognition_code/pos_neg_1.png}
+  \caption{Test Accuracies for positive and negative samples}
+\end{figure}
+
+\newpage
+
 
 \section{CNN-based Classifier}
 
@@ -146,6 +183,42 @@ the following:
   \includegraphics[width=0.6\textwidth, height=0.15\textheight]{images/VGG.png}
   \caption{VGG simplified architecture}
 \end{figure}
+This has simply been implemented with torch like this:
+\newpage
+\begin{lstlisting}[language=Python, caption= VGG layers]
+  self.conv_block1 = nn.Sequential(
+      nn.Conv2d(in_channels=3, out_channels=64, kernel_size=3, padding=1),
+      nn.ReLU(),
+      nn.MaxPool2d(2)
+  )
+  self.conv_block2 = nn.Sequential(
+      nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, padding=1),
+      nn.ReLU(),
+      nn.MaxPool2d(2)
+  )
+  self.conv_block3 = nn.Sequential(
+      nn.Conv2d(in_channels=128, out_channels=256, kernel_size=3, padding=1),
+      nn.ReLU(),
+      nn.MaxPool2d(2)
+  )
+  self.conv_block4 = nn.Sequential(
+      nn.Conv2d(in_channels=256, out_channels=512, kernel_size=3, padding=1),
+      nn.ReLU(),
+      nn.MaxPool2d(2)
+  )
+  self.conv_block5 = nn.Sequential(
+      nn.Conv2d(in_channels=512, out_channels=512, kernel_size=3, padding=1),
+      nn.ReLU(),
+      nn.MaxPool2d(2)
+  )
+  self.classifier = nn.Sequential(
+      nn.Linear(512, self.fc_layer),
+      nn.ReLU(),
+      nn.Dropout2d(0.5),
+      nn.Linear(self.fc_layer, self.classes)
+  )
+\end{lstlisting}
+
 
 The model was trained with the following parameters:
 \begin{center}
@@ -183,6 +256,7 @@ pass from around 45\% to a final value of 81.92\%
   \caption{Validation Accuracies}
 \end{figure}
 
+\newpage
 \subsection{Testing}
 The model after training with 50 epochs achieved a test accuracy of 80.86 on the CIFAR10 dataset.
 The test script was run locally on cpu for convenience and gave the following output:
