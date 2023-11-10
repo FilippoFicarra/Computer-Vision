@@ -69,8 +69,8 @@ def grid_points(img, nPointsX, nPointsY, border):
     image_height = img.shape[0]
     image_width = img.shape[1]
 
-    xs = np.linspace(border+1, image_width-border, nPointsX)
-    ys = np.linspace(border+1, image_height-border, nPointsY)
+    xs = np.linspace(border+1, image_width-border, nPointsX, dtype=int)
+    ys = np.linspace(border+1, image_height-border, nPointsY, dtype=int)
     
 
     vPoints = np.array([(x, y) for x in xs for y in ys])
@@ -246,7 +246,7 @@ if __name__ == '__main__':
   
     # k = 200   # todo
     numiter = 300  # todo
-    ks = [55]# range(5, 150, 5) 
+    ks = range(5, 150, 5) 
     
     pos_acc = []
     neg_acc = []
@@ -287,4 +287,4 @@ if __name__ == '__main__':
         neg_acc.append(acc_neg)
         # break
         
-    # plot(pos_acc, neg_acc, ks)
+    plot(pos_acc, neg_acc, ks)
