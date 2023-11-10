@@ -93,8 +93,8 @@ following steps:
 
 You can see this procedure in the following snippet:
 \begin{lstlisting}[language=Python, caption=Grid creation]
-  xs = np.linspace(border+1, image_width-border, nPointsX)
-  ys = np.linspace(border+1, image_height-border, nPointsY)
+  xs = np.linspace(border+1, image_width-border, nPointsX, dtype=int) # int indices
+  ys = np.linspace(border+1, image_height-border, nPointsY, dtype=int) # int indices
   
   vPoints = np.array([(x, y) for x in xs for y in ys])
 \end{lstlisting}
@@ -149,12 +149,12 @@ is the class we predict.
 The picture below show the trend of the posistive and negative samples when the number
 of centroids vary. It is useful to see that for little number of centroids like 5 the accuracy for the positive 
 samples is very low, while increasing the number of centrioids we can be more accurate untill a certain amount of centroids. 
-The more centroids the lower the accuracy tend to be. We can choose for example a value of k = 55, giving
-good results while keeping the complexity moderate.
+The more centroids the lower the accuracy tend to be. We can choose for example a value of k = 35, giving
+good results while keeping the complexity moderate with respect to k=110 for example, whene the performance are very similar.
 
 You can find the log of the multiple k run into the file "log\_bow\_main.txt".
 
-For the value k = 55 we have the following result:
+For the value k = 35 we have the following result:
 
 \begin{figure}[!h]
   \centering
@@ -165,7 +165,7 @@ For the value k = 55 we have the following result:
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=1\textwidth]{../exercise4_object_recognition_code/pos_neg_1.png}
+  \includegraphics[width=1\textwidth]{../exercise4_object_recognition_code/pos_neg_2.png}
   \caption{Test Accuracies for positive and negative samples}
 \end{figure}
 

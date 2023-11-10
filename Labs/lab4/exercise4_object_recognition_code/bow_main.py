@@ -246,7 +246,7 @@ if __name__ == '__main__':
   
     # k = 200   # todo
     numiter = 300  # todo
-    ks = range(5, 150, 5) 
+    ks = [35]# range(5, 150, 5) 
     
     pos_acc = []
     neg_acc = []
@@ -287,4 +287,4 @@ if __name__ == '__main__':
         neg_acc.append(acc_neg)
         # break
         
-    plot(pos_acc, neg_acc, ks)
+    # plot(pos_acc, neg_acc, ks)
