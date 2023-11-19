@@ -16,6 +16,8 @@
 \usepackage{datetime}
 \usepackage{listings}
 \usepackage{subcaption}
+\usepackage[ruled,vlined]{algorithm2e}
+
 
 
 
@@ -67,7 +69,130 @@
       \timestamp
       \end{center}
 
-\section{Introduction}
+\section{Mean-Shift Algorithm}
+
+The Mean-Shift Algorithm aims to find modes in a given dataset. It is used 
+to perform unsupervised clustering. The principal benefit of 
+this algorithm is that we don't have to impose a fixed number of cluster a priori
+but it will just depend on a variable called "bandwidth".
+
+
+\subsection{Distance function}
+
+The first function completed is the distance function. This function it will 
+further used in the gaussian kernel to compute the weight of each point.
+The following function simply computes the eucledian distance of the point $\bm{x}$ and all
+points in $\bm{X}$.
+
+\begin{lstlisting}[language=Python, caption=Distance function]
+  def distance(x, X):
+    return np.sqrt(np.sum((x - X) ** 2, axis=1))
+\end{lstlisting}
+
+\subsection{Gaussian Kernel}
+The Gaussian kernel is used since it provides continuous and smooth distributions
+and are suitable to extract information also in noisy data.
+
+Give a bandwith, the gaussian kernel is simply the following:
+\begin{lstlisting}[language=Python, caption=Gaussian Kernel]
+  def gaussian(dist, bandwidth):
+    K = np.exp(-(dist ** 2) / (2 * bandwidth ** 2))
+    return K
+\end{lstlisting}
+
+\subsection{Update point}
+Updating the point is the part in where the algorithm start to find the clusters.
+The update of a point $y^{(t+1)}$ is computed as following.
+
+\begin{center}
+  $y_j^{(t)} \leftarrow \frac{\sum\limits_{i=1}^{n}X_i w_i(j)}{\sum\limits_{i=1}^{n}w_i(j)}$
+\end{center}
+
+where the $w_i(j)$ are the weights for the j-th point computed with the gaussian function above.
+
+\subsection{Iterate the algorithm}
+
+The final step is to compute the update for each point and compute it for a number of iteration 
+as we can show below:
+
+\begin{lstlisting}[language=Python, caption=Mean-shift]
+  def meanshift_step(X, bandwidth=1):
+    y = np.copy(X)
+    for i in range(X.shape[0]):
+        dist = distance(y[i], X)
+        weight = gaussian(dist, bandwidth)
+        y[i] = update_point(weight, X)
+    return y
+
+  def meanshift(X):
+    for _ in range(20):
+        X = meanshift_step(X, bandwidth=bandwidth)
+    return X
+\end{lstlisting}
+
+Then the centroids are computed in this way:
+\begin{lstlisting}[language=Python, caption=Centroids]
+  centroids, labels = np.unique((X / 4).round(), return_inverse=True, axis=0)
+\end{lstlisting}
+
+\section{Results}
+
+First, the number of colors was 24 so we were constrained with the number of clusters.
+This has been noticed when using different values of the bandwidth in the gaussian kernels.
+
+\begin{figure}[htbp]
+  \begin{minipage}[t]{0.6\textwidth}
+    \centering
+    \begin{tabular}{|c|c|}
+      \hline
+      \textbf{Bandwidth} & \textbf{Number of Clusters} \\
+      \hline
+      1 & 282 \\
+      2 & 44 \\
+      2.5 & 25 \\
+      3 & 15 \\
+      4 & 9 \\
+      5 & 5 \\
+      6 & 4 \\
+      7 & 3 \\
+      \hline
+    \end{tabular}
+    \caption{Bandwidth vs. Number of Clusters}
+    \label{tab:bandwidth_clusters}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}{0.4\textwidth}
+    Lower bandwidth correspond to local understanding of data and so to a greater number of clusters, 
+    while higher bandwidth will have more general understanding of the data and tend to reduce the numnber of 
+    clusters. On the left a table with the bandwith and the corresponding number of clusters. 
+    Given this values, the bandwith suitable for this exercise were from 3 on.
+    Below the images corresponding to bandwidth = 3,4,5,6,7. \end{minipage}
+\end{figure}
+
+% Given this value, the bandwith suitable for this exercise were from 3 on. Below the images corresponding to bandwidth = 3,4,5,6,7.
+
+\begin{figure}[!h]
+  \minipage{0.2\textwidth}
+    \includegraphics[width=\linewidth]{../mean-shift/result_3.png}
+    \caption{bandwidth = 3}
+  \endminipage\hfill
+  \minipage{0.2\textwidth}
+    \includegraphics[width=\linewidth]{../mean-shift/result_4.png}
+    \caption{bandwidth = 4}
+  \endminipage\hfill
+  \minipage{0.2\textwidth}
+    \includegraphics[width=\linewidth]{../mean-shift/result_5.png}
+    \caption{bandwidth = 5}
+  \endminipage\hfill
+  \minipage{0.2\textwidth}
+    \includegraphics[width=\linewidth]{../mean-shift/result_6.png}
+    \caption{bandwidth = 6}
+  \endminipage\space\space\space 
+  \minipage{0.2\textwidth}
+    \includegraphics[width=\linewidth]{../mean-shift/result_7.png}
+    \caption{bandwidth = 7}
+  \endminipage
+  \end{figure}
 
 
 \end{document}

@@ -26,7 +26,6 @@ def meanshift_step(X, bandwidth=1):
     return y
 
 def meanshift(X):
-    print(f"Running meanshift with bandwidth {bandwidth}")
     for _ in range(20):
         X = meanshift_step(X, bandwidth=bandwidth)
     return X
