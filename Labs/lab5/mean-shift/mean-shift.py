@@ -39,7 +39,7 @@ image_lab = color.rgb2lab(image)
 shape = image_lab.shape # record image shape
 image_lab = image_lab.reshape([-1, 3])  # flatten the image
 
-for bandwidth in [1,2,3,4,5,6,7]:
+for bandwidth in [1,2,2.5,3,4,5,6,7]:
     # Run your mean-shift algorithm
     try:
         t = time.time()
