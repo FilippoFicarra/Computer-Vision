@@ -40,8 +40,15 @@ class SegNetLite(nn.Module):
         layers_conv_down = []
         layers_bn_down = []
         layers_pooling = []
-        raise NotImplementedError('Downsampling layers are not implemented!')
-
+        
+        down_size = input_size
+        for i in range(self.num_down_layers):
+            layers_conv_down.append(nn.Conv2d(down_size, down_filter_sizes[i], kernel_sizes[i], padding=conv_paddings[i]))
+            layers_bn_down.append(nn.BatchNorm2d(down_filter_sizes[i]))
+            layers_pooling.append(nn.MaxPool2d(pooling_kernel_sizes[i], stride=pooling_strides[i], return_indices=True))
+            down_size = down_filter_sizes[i]
+            
+        
         # Convert Python list to nn.ModuleList, so that PyTorch's autograd
         # package can track gradients and update parameters of these layers
         self.layers_conv_down = nn.ModuleList(layers_conv_down)
@@ -56,7 +63,14 @@ class SegNetLite(nn.Module):
         layers_conv_up = []
         layers_bn_up = []
         layers_unpooling = []
-        raise NotImplementedError('Upsampling layers are not implemented!')
+
+        
+        up_size = down_filter_sizes[-1]
+        for i in range(self.num_up_layers):
+            layers_unpooling.append(nn.MaxUnpool2d(pooling_kernel_sizes[i], stride=pooling_strides[i]))
+            layers_conv_up.append(nn.Conv2d(up_size, up_filter_sizes[i], kernel_sizes[i], padding=conv_paddings[i]))
+            layers_bn_up.append(nn.BatchNorm2d(up_filter_sizes[i]))
+            up_size = up_filter_sizes[i]
 
         # Convert Python list to nn.ModuleList, so that PyTorch's autograd
         # can track gradients and update parameters of these layers
@@ -65,12 +79,30 @@ class SegNetLite(nn.Module):
         self.layers_unpooling = nn.ModuleList(layers_unpooling)
 
         self.relu = nn.ReLU(True)
-
+                                          
         # Implement a final 1x1 convolution to to get the logits of 11 classes (background + 10 digits)
-        raise NotImplementedError('Final convolution layer is not implemented!')
+        self.conv_final = nn.Conv2d(up_filter_sizes[-1], 11, 1, padding=0)
 
     def forward(self, x):
-        raise NotImplementedError('Forward function not implemented!')
+        
+        indices = []
+        for i in range(self.num_down_layers):
+            x = self.layers_conv_down[i](x)
+            x = self.layers_bn_down[i](x)
+            x = self.relu(x)
+            x, index = self.layers_pooling[i](x)
+            indices.append(index)
+            
+        indices.reverse()
+        
+        for i in range(self.num_up_layers):
+            x = self.layers_unpooling[i](x, indices[i])
+            x = self.layers_conv_up[i](x)
+            x = self.layers_bn_up[i](x)
+            x = self.relu(x)
+        
+        x = self.conv_final(x)
+        return x
 
 
 def get_seg_net(**kwargs):
