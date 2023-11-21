@@ -18,15 +18,15 @@ def update_point(weight, X):
     return num / den
 
 def meanshift_step(X, bandwidth=1):
-    y = np.copy(X)
     for i in range(X.shape[0]):
-        dist = distance(y[i], X)
+        dist = distance(X[i], X)
         weight = gaussian(dist, bandwidth)
-        y[i] = update_point(weight, X)
-    return y
+        X[i] = update_point(weight, X)
+    return X
 
 def meanshift(X):
     for _ in range(20):
+        print(_)
         X = meanshift_step(X, bandwidth=bandwidth)
     return X
 
