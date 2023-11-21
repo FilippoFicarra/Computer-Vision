@@ -31,15 +31,17 @@ def meanshift(X):
 
 scale = 0.5    # downscale the image to run faster
 
-# Load image and convert it to CIELAB space
-image = rescale(io.imread('eth.jpg'), scale, channel_axis=-1)
-image_lab = color.rgb2lab(image)
-shape = image_lab.shape # record image shape
-image_lab = image_lab.reshape([-1, 3])  # flatten the image
 
-for bandwidth in [1,2,2.5,3,4,5,6,7]:
-    # Run your mean-shift algorithm
+
+for bandwidth in [1, 2, 2.5, 3, 4, 5, 6, 7]:
     try:
+        print(f"Running meanshift with bandwidth {bandwidth}")
+        # Load image and convert it to CIELAB space
+        image = rescale(io.imread('eth.jpg'), scale, channel_axis=-1)
+        image_lab = color.rgb2lab(image)
+        shape = image_lab.shape # record image shape
+        image_lab = image_lab.reshape([-1, 3])  # flatten the image
+        
         t = time.time()
         X = meanshift(image_lab)
         t = time.time() - t
