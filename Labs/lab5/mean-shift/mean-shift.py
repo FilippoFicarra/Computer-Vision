@@ -26,7 +26,6 @@ def meanshift_step(X, bandwidth=1):
 
 def meanshift(X):
     for _ in range(20):
-        print(_)
         X = meanshift_step(X, bandwidth=bandwidth)
     return X
 
