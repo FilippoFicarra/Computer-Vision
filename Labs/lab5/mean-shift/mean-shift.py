@@ -56,6 +56,6 @@ for bandwidth in [1,2,2.5,3,4,5,6,7]:
         result_image = colors[labels].reshape(shape)
         result_image = rescale(result_image, 1 / scale, order=0, channel_axis=-1)     # resize result image to original resolution
         result_image = (result_image * 255).astype(np.uint8)
-        io.imsave(f'result_{bandwidth}.png', result_image)
+        io.imsave(f'data/result_{bandwidth}.png', result_image)
     except:
         print(f"bandwidth {bandwidth} failed")
