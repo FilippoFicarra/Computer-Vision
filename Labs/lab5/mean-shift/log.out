@@ -1,27 +1,26 @@
 Running meanshift with bandwidth 1
-Elapsed time for mean-shift: 222.22658157348633
-Number of clusters: 282
+Elapsed time for mean-shift: 221.1397829055786
+Number of clusters: 284
 bandwidth 1 failed
 Running meanshift with bandwidth 2
-Elapsed time for mean-shift: 226.17863774299622
+Elapsed time for mean-shift: 226.1784119606018
 Number of clusters: 44
 bandwidth 2 failed
 Running meanshift with bandwidth 2.5
-Elapsed time for mean-shift: 229.34504294395447
-Number of clusters: 25
-bandwidth 2.5 failed
+Elapsed time for mean-shift: 222.0467929840088
+Number of clusters: 21
 Running meanshift with bandwidth 3
-Elapsed time for mean-shift: 228.94616031646729
+Elapsed time for mean-shift: 459.00259375572205
 Number of clusters: 15
 Running meanshift with bandwidth 4
-Elapsed time for mean-shift: 228.8104658126831
+Elapsed time for mean-shift: 225.22850275039673
 Number of clusters: 9
 Running meanshift with bandwidth 5
-Elapsed time for mean-shift: 231.2860028743744
-Number of clusters: 5
-Running meanshift with bandwidth 6
-Elapsed time for mean-shift: 229.0445749759674
+Elapsed time for mean-shift: 230.65302801132202
 Number of clusters: 4
+Running meanshift with bandwidth 6
+Elapsed time for mean-shift: 227.2269790172577
+Number of clusters: 5
 Running meanshift with bandwidth 7
-Elapsed time for mean-shift: 227.51622867584229
+Elapsed time for mean-shift: 225.23432803153992
 Number of clusters: 3
