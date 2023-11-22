@@ -133,62 +133,73 @@ Then the centroids are computed in this way:
 
 First, the number of colors was 24 so we were constrained with the number of clusters.
 This has been noticed when using different values of the bandwidth in the gaussian kernels.
-
-\begin{figure}[htbp]
-  \begin{minipage}[t]{0.6\textwidth}
-    \centering
-    \begin{tabular}{|c|c|}
-      \hline
-      \textbf{Bandwidth} & \textbf{Number of Clusters} \\
-      \hline
-      1 & 284 \\
-      2 & 44 \\
-      2.5 & 21 \\
-      3 & 15 \\
-      4 & 9 \\
-      5 & 4 \\
-      6 & 5 \\
-      7 & 3 \\
-      \hline
-    \end{tabular}
-    \caption{Bandwidth vs. Number of Clusters}
-    \label{tab:bandwidth_clusters}
-  \end{minipage}%
-  \hfill
-  \begin{minipage}{0.4\textwidth}
-    Lower bandwidth correspond to local understanding of data and so to a greater number of clusters, 
-    while higher bandwidth will have more general understanding of the data and tend to reduce the numnber of 
-    clusters. On the left a table with the bandwith and the corresponding number of clusters. 
-    Given this values, the bandwith suitable for this exercise were from 2.5 on.
-    Below the images corresponding to bandwidth = 2.5, 3, 4, 5, 6, 7. \end{minipage}
-\end{figure}
+% \begin{figure}[htbp]
+%   \begin{minipage}[t]{0.6\textwidth}
+%     \centering
+%     \begin{tabular}{|c|c|}
+%       \hline
+%       \textbf{Bandwidth} & \textbf{Number of Clusters} \\
+%       \hline
+%       1 & 284 \\
+%       2 & 44 \\
+%       2.5 & 21 \\
+%       3 & 15 \\
+%       4 & 9 \\
+%       5 & 4 \\
+%       6 & 5 \\
+%       7 & 3 \\
+%       \hline
+%     \end{tabular}
+%     \caption{Bandwidth vs. Number of Clusters}
+%     \label{tab:bandwidth_clusters}
+%   \end{minipage}%
+%   \hfill
+%   \begin{minipage}{0.4\textwidth}
+%      \end{minipage}
+% \end{figure}
+Lower bandwidth correspond to local understanding of data and so to a greater number of clusters, 
+while higher bandwidth will have more general understanding of the data and tend to reduce the numnber of 
+clusters. Withou any further fucntions, the number of clusters for bandwidth equal to 1 and 2 were 284 and 44.
+Given this values, the bandwith suitable for this exercise were from 2.5 on.
+Below the images corresponding to bandwidth = 2.5, 3, 4, 5, 6, 7.
+To fix the problem of too many cluster, we can aggregate cluster, for example using K means or as I did in the 
+code in the function shrink\_labels, just include each cluster to the nearest of the 24 biggest clusters. The results were 
+obviously more imprecise.
 
 % Given this value, the bandwith suitable for this exercise were from 3 on. Below the images corresponding to bandwidth = 3,4,5,6,7.
 
 \begin{figure}[!h]
   \minipage{0.3\textwidth}
     \includegraphics[width=\linewidth]{../mean-shift/data/result_2_5.png}
-  \caption{bandwidth = 2.5}
+  \caption{bandwidth = 2.5, clusters = 21}
   \endminipage\space
   \minipage{0.3\textwidth}
     \includegraphics[width=\linewidth]{../mean-shift/data/result_3.png}
-    \caption{bandwidth = 3}
+    \caption{bandwidth = 3, clusters = 15}
   \endminipage\space
   \minipage{0.3\textwidth}
     \includegraphics[width=\linewidth]{../mean-shift/data/result_4.png}
-    \caption{bandwidth = 4}
+    \caption{bandwidth = 4, clusters = 9}
   \endminipage\space
   \minipage{0.3\textwidth}
     \includegraphics[width=\linewidth]{../mean-shift/data/result_5.png}
-    \caption{bandwidth = 5}
+    \caption{bandwidth = 5, clusters = 4}
   \endminipage\hfill
   \minipage{0.3\textwidth}
     \includegraphics[width=\linewidth]{../mean-shift/data/result_6.png}
-    \caption{bandwidth = 6}
+    \caption{bandwidth = 6, clusters = 5}
   \endminipage\hfill
   \minipage{0.3\textwidth}
     \includegraphics[width=\linewidth]{../mean-shift/data/result_7.png}
-    \caption{bandwidth = 7}
+    \caption{bandwidth = 7, clusters = 3}
+  \endminipage\hfill
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{../mean-shift/data/result_1.png}
+    \caption{bandwidth = 1, clusters = 24, original clusters = 284}
+  \endminipage\hfill
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{../mean-shift/data/result_2.png}
+    \caption{bandwidth = 2, clusters = 24, original clusters = 44}
   \endminipage
   \end{figure}
 

@@ -29,35 +29,55 @@ def meanshift(X):
         X = meanshift_step(X, bandwidth=bandwidth)
     return X
 
+# function to reduce the number of labels
+def shrink_labels(centroids, labels, colors):
+    
+    l , counts = np.unique(labels, return_counts=True)
+    l = l[np.argsort(counts)[::-1]]
+    
+    big_clusters = l[:len(colors)]
+
+    # for each label, if it is not in big_clusters, change it to the nearest one in big_clusters
+    for i in range(len(l)):
+        if labels[i] not in big_clusters:
+            dist = distance(centroids[labels[i]], centroids[big_clusters])
+            labels[i] = big_clusters[np.argmin(dist)]
+    
+    return labels % len(colors)   # make sure labels are in range [0, len(colors))
+
+
 scale = 0.5    # downscale the image to run faster
 
-
-
 for bandwidth in [1, 2, 2.5, 3, 4, 5, 6, 7]:
-    try:
-        print(f"Running meanshift with bandwidth {bandwidth}")
-        # Load image and convert it to CIELAB space
-        image = rescale(io.imread('eth.jpg'), scale, channel_axis=-1)
-        image_lab = color.rgb2lab(image)
-        shape = image_lab.shape # record image shape
-        image_lab = image_lab.reshape([-1, 3])  # flatten the image
-        
-        t = time.time()
-        X = meanshift(image_lab)
-        t = time.time() - t
-        print ('Elapsed time for mean-shift: {}'.format(t))
 
-        # Load label colors and draw labels as an image
-        colors = np.load('colors.npz')['colors']
-        colors[colors > 1.0] = 1
-        colors[colors < 0.0] = 0
+    print(f"Running meanshift with bandwidth {bandwidth}")
+    # Load image and convert it to CIELAB space
+    image = rescale(io.imread('eth.jpg'), scale, channel_axis=-1)
+    image_lab = color.rgb2lab(image)
+    shape = image_lab.shape # record image shape
+    image_lab = image_lab.reshape([-1, 3])  # flatten the image
+    
+    t = time.time()
+    X = meanshift(image_lab)
+    t = time.time() - t
+    print ('Elapsed time for mean-shift: {}'.format(t))
 
-        centroids, labels = np.unique((X / 4).round(), return_inverse=True, axis=0)
-        print(f"Number of clusters: {len(centroids)}")
+    # Load label colors and draw labels as an image
+    colors = np.load('colors.npz')['colors']
+    colors[colors > 1.0] = 1
+    colors[colors < 0.0] = 0
 
-        result_image = colors[labels].reshape(shape)
-        result_image = rescale(result_image, 1 / scale, order=0, channel_axis=-1)     # resize result image to original resolution
-        result_image = (result_image * 255).astype(np.uint8)
-        io.imsave(f'data/result_{bandwidth}.png', result_image)
-    except:
-        print(f"bandwidth {bandwidth} failed")
+    centroids, labels = np.unique((X / 4).round(), return_inverse=True, axis=0)
+    print(len(labels))
+    
+    if len(centroids) > len(colors):
+        print(f"Number of clusters ({len(centroids)}) is greater than number of colors ({len(colors)}).")
+        labels = shrink_labels(centroids, labels, colors)
+    
+    print(f"Number of different labels: {len(np.unique(labels))}")
+
+    result_image = colors[labels].reshape(shape)
+    result_image = rescale(result_image, 1 / scale, order=0, channel_axis=-1)     # resize result image to original resolution
+    result_image = (result_image * 255).astype(np.uint8)
+    io.imsave(f'data_2/result_{bandwidth}.png', result_image)
+
