@@ -29,7 +29,6 @@ def meanshift(X):
         X = meanshift_step(X, bandwidth=bandwidth)
     return X
 
-# function to reduce the number of labels
 def shrink_labels(centroids, labels, colors):
     
     l , counts = np.unique(labels, return_counts=True)
@@ -37,13 +36,12 @@ def shrink_labels(centroids, labels, colors):
     
     big_clusters = l[:len(colors)]
 
-    # for each label, if it is not in big_clusters, change it to the nearest one in big_clusters
     for i in range(len(l)):
         if labels[i] not in big_clusters:
             dist = distance(centroids[labels[i]], centroids[big_clusters])
             labels[i] = big_clusters[np.argmin(dist)]
     
-    return labels % len(colors)   # make sure labels are in range [0, len(colors))
+    return labels % len(colors) 
 
 
 scale = 0.5    # downscale the image to run faster
@@ -79,5 +77,5 @@ for bandwidth in [1, 2, 2.5, 3, 4, 5, 6, 7]:
     result_image = colors[labels].reshape(shape)
     result_image = rescale(result_image, 1 / scale, order=0, channel_axis=-1)     # resize result image to original resolution
     result_image = (result_image * 255).astype(np.uint8)
-    io.imsave(f'data_2/result_{bandwidth}.png', result_image)
+    io.imsave(f'data/result_{bandwidth}.png', result_image)
 
