@@ -74,7 +74,7 @@
 The Mean-Shift Algorithm aims to find modes in a given dataset. It is used 
 to perform unsupervised clustering. The principal benefit of 
 this algorithm is that we don't have to impose a fixed number of cluster a priori
-but it will just depend on a variable called "bandwidth".
+but it will just depend on a variable called ``bandwidth''.
 
 
 \subsection{Distance function}
@@ -113,7 +113,7 @@ where the $w_i(j)$ are the weights for the j-th point computed with the gaussian
 \subsection{Iterate the algorithm}
 
 The final step is to compute the update for each point and compute it for a number of iteration 
-equal to 20:
+equal to 20 and then compute the centroids:
 
 \begin{lstlisting}[language=Python, caption=Mean-shift]
   def meanshift_step(X, bandwidth=1):
@@ -122,16 +122,16 @@ equal to 20:
       weight = gaussian(dist, bandwidth)
       X[i] = update_point(weight, X)
     return X
+
+  centroids, labels = np.unique((X / 4).round(), return_inverse=True, axis=0)
+
 \end{lstlisting}
 
-Then the centroids are computed in this way:
-\begin{lstlisting}[language=Python, caption=Centroids]
-  centroids, labels = np.unique((X / 4).round(), return_inverse=True, axis=0)
-\end{lstlisting}
 
 \section{Results}
 
-First, the number of colors was 24 so we were constrained with the number of clusters.
+First, the number of colors was 24 so we were constrained with the number of clusters, 
+if the results gave more clusters than the number of colors we would have an error when running.
 This has been noticed when using different values of the bandwidth in the gaussian kernels.
 % \begin{figure}[htbp]
 %   \begin{minipage}[t]{0.6\textwidth}
@@ -158,13 +158,13 @@ This has been noticed when using different values of the bandwidth in the gaussi
 %      \end{minipage}
 % \end{figure}
 Lower bandwidth correspond to local understanding of data and so to a greater number of clusters, 
-while higher bandwidth will have more general understanding of the data and tend to reduce the numnber of 
-clusters. Withou any further fucntions, the number of clusters for bandwidth equal to 1 and 2 were 284 and 44.
-Given this values, the bandwith suitable for this exercise were from 2.5 on.
+while higher bandwidth will have more general understanding of the data and tend to reduce the number of 
+clusters. Without any further fucntions, for example, the number of clusters for bandwidth equal to 1 and 2 were 284 and 44, that are more than the number of colors.
+After running, the bandwith suitable for this exercise were from 2.5 on.
 Below the images corresponding to bandwidth = 2.5, 3, 4, 5, 6, 7.
 To fix the problem of too many cluster, we can aggregate cluster, for example using K means or as I did in the 
 code in the function shrink\_labels, just include each cluster to the nearest of the 24 biggest clusters. The results were 
-obviously more imprecise.
+obviously more imprecise. The last 2 images correspond to the images for which we aggregate the clusters.
 
 % Given this value, the bandwith suitable for this exercise were from 3 on. Below the images corresponding to bandwidth = 3,4,5,6,7.
 
