@@ -18,11 +18,12 @@ def update_point(weight, X):
     return num / den
 
 def meanshift_step(X, bandwidth=1):
+    y = X.copy()
     for i in range(X.shape[0]):
         dist = distance(X[i], X)
         weight = gaussian(dist, bandwidth)
-        X[i] = update_point(weight, X)
-    return X
+        y[i] = update_point(weight, X)
+    return y
 
 def meanshift(X):
     for _ in range(20):
@@ -30,7 +31,6 @@ def meanshift(X):
     return X
 
 def shrink_labels(centroids, labels, colors):
-    
     l , counts = np.unique(labels, return_counts=True)
     l = l[np.argsort(counts)[::-1]]
     
@@ -66,7 +66,6 @@ for bandwidth in [1, 2, 2.5, 3, 4, 5, 6, 7]:
     colors[colors < 0.0] = 0
 
     centroids, labels = np.unique((X / 4).round(), return_inverse=True, axis=0)
-    print(len(labels))
     
     if len(centroids) > len(colors):
         print(f"Number of clusters ({len(centroids)}) is greater than number of colors ({len(colors)}).")
@@ -78,4 +77,4 @@ for bandwidth in [1, 2, 2.5, 3, 4, 5, 6, 7]:
     result_image = rescale(result_image, 1 / scale, order=0, channel_axis=-1)     # resize result image to original resolution
     result_image = (result_image * 255).astype(np.uint8)
     io.imsave(f'data/result_{bandwidth}.png', result_image)
-
+    

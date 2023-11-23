@@ -1,26 +1,27 @@
 Running meanshift with bandwidth 1
-Elapsed time for mean-shift: 221.1397829055786
-Number of clusters: 284
-bandwidth 1 failed
+Elapsed time for mean-shift: 224.6707468032837
+Number of clusters (282) is greater than number of colors (24).
+Number of different labels: 24
 Running meanshift with bandwidth 2
-Elapsed time for mean-shift: 226.1784119606018
-Number of clusters: 44
-bandwidth 2 failed
+Elapsed time for mean-shift: 224.24021410942078
+Number of clusters (44) is greater than number of colors (24).
+Number of different labels: 24
 Running meanshift with bandwidth 2.5
-Elapsed time for mean-shift: 222.0467929840088
-Number of clusters: 21
+Elapsed time for mean-shift: 225.67806267738342
+Number of clusters (25) is greater than number of colors (24).
+Number of different labels: 24
 Running meanshift with bandwidth 3
-Elapsed time for mean-shift: 459.00259375572205
-Number of clusters: 15
+Elapsed time for mean-shift: 228.07755208015442
+Number of different labels: 15
 Running meanshift with bandwidth 4
-Elapsed time for mean-shift: 225.22850275039673
-Number of clusters: 9
+Elapsed time for mean-shift: 229.36888599395752
+Number of different labels: 9
 Running meanshift with bandwidth 5
-Elapsed time for mean-shift: 230.65302801132202
-Number of clusters: 4
+Elapsed time for mean-shift: 241.04969763755798
+Number of different labels: 5
 Running meanshift with bandwidth 6
-Elapsed time for mean-shift: 227.2269790172577
-Number of clusters: 5
+Elapsed time for mean-shift: 228.78341794013977
+Number of different labels: 4
 Running meanshift with bandwidth 7
-Elapsed time for mean-shift: 225.23432803153992
-Number of clusters: 3
+Elapsed time for mean-shift: 229.6528959274292
+Number of different labels: 3

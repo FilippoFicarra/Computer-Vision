@@ -117,11 +117,12 @@ equal to 20 and then compute the centroids:
 
 \begin{lstlisting}[language=Python, caption=Mean-shift]
   def meanshift_step(X, bandwidth=1):
+    y = X.copy()
     for i in range(X.shape[0]):
-      dist = distance(X[i], X)
-      weight = gaussian(dist, bandwidth)
-      X[i] = update_point(weight, X)
-    return X
+        dist = distance(X[i], X)
+        weight = gaussian(dist, bandwidth)
+        y[i] = update_point(weight, X)
+    return y
 
   centroids, labels = np.unique((X / 4).round(), return_inverse=True, axis=0)
 
@@ -157,22 +158,15 @@ This has been noticed when using different values of the bandwidth in the gaussi
 %   \begin{minipage}{0.4\textwidth}
 %      \end{minipage}
 % \end{figure}
-Lower bandwidth correspond to local understanding of data and so to a greater number of clusters, 
-while higher bandwidth will have more general understanding of the data and tend to reduce the number of 
-clusters. Without any further fucntions, for example, the number of clusters for bandwidth equal to 1 and 2 were 284 and 44, that are more than the number of colors.
-After running, the bandwith suitable for this exercise were from 2.5 on.
-Below the images corresponding to bandwidth = 2.5, 3, 4, 5, 6, 7.
-To fix the problem of too many cluster, we can aggregate cluster, for example using K means or as I did in the 
-code in the function shrink\_labels, just include each cluster to the nearest of the 24 biggest clusters. The results were 
-obviously more imprecise. The last 2 images correspond to the images for which we aggregate the clusters.
+Due to this some of the runs may not succed. Larger the bandwith fewer the number of clusters that the 
+algorithm will discover, since the bandwidth is the neighbourhood in which the gaussian is "searching". The value that gave problem were 1, 2, and 2.5, 
+while all the others generated less cluster than the number of colors.
+To solve the problem of too many centroids I just took the 24 bigger cluster and merge the other clusters to the nearest.
+Another method could be do K-means on the centroids with k=24.
+The result are shown in the images below.
 
-% Given this value, the bandwith suitable for this exercise were from 3 on. Below the images corresponding to bandwidth = 3,4,5,6,7.
 
 \begin{figure}[!h]
-  \minipage{0.3\textwidth}
-    \includegraphics[width=\linewidth]{../mean-shift/data/result_2_5.png}
-  \caption{bandwidth = 2.5, clusters = 21}
-  \endminipage\space
   \minipage{0.3\textwidth}
     \includegraphics[width=\linewidth]{../mean-shift/data/result_3.png}
     \caption{bandwidth = 3, clusters = 15}
@@ -183,11 +177,11 @@ obviously more imprecise. The last 2 images correspond to the images for which w
   \endminipage\space
   \minipage{0.3\textwidth}
     \includegraphics[width=\linewidth]{../mean-shift/data/result_5.png}
-    \caption{bandwidth = 5, clusters = 4}
+    \caption{bandwidth = 5, clusters = 5}
   \endminipage\hfill
   \minipage{0.3\textwidth}
     \includegraphics[width=\linewidth]{../mean-shift/data/result_6.png}
-    \caption{bandwidth = 6, clusters = 5}
+    \caption{bandwidth = 6, clusters = 4}
   \endminipage\hfill
   \minipage{0.3\textwidth}
     \includegraphics[width=\linewidth]{../mean-shift/data/result_7.png}
@@ -195,12 +189,16 @@ obviously more imprecise. The last 2 images correspond to the images for which w
   \endminipage\hfill
   \minipage{0.3\textwidth}
     \includegraphics[width=\linewidth]{../mean-shift/data/result_1.png}
-    \caption{bandwidth = 1, clusters = 24, original clusters = 284}
+    \caption{bandwidth = 1, clusters = 24, original clusters = 282}
   \endminipage\hfill
   \minipage{0.3\textwidth}
     \includegraphics[width=\linewidth]{../mean-shift/data/result_2.png}
     \caption{bandwidth = 2, clusters = 24, original clusters = 44}
-  \endminipage
+  \endminipage\space\space\space\space\space\space\space\space
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{../mean-shift/data/result_2.5.png}
+  \caption{bandwidth = 2.5, clusters = 24, original clusters = 25}
+  \endminipage\space
   \end{figure}
 
 
