@@ -221,14 +221,14 @@ if __name__ == "__main__":
     video_name = 'video3.avi'
     params = {
         "draw_plots": 1,
-        "hist_bin": 10,
-        "alpha": 0.3,
+        "hist_bin": 16,
+        "alpha": 0,
         "sigma_observe": 0.1,
-        "model": 1,
-        "num_particles": 100,
-        "sigma_position": 10, #15
+        "model": 0,
+        "num_particles": 30,
+        "sigma_position": 15,
         "sigma_velocity": 1,
-        "initial_velocity": (5, 0)
+        "initial_velocity": (1, 10)
     }
 
     condensation_tracker(video_name, params)
