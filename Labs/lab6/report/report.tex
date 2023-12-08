@@ -199,7 +199,8 @@ At the end the particles are clipped to be in the frame.
         
         chi_2 = chi2_cost(histogram, hist)
         
-        particles_w[i] = 1/(np.sqrt(2*np.pi)*sigma_observe) * np.exp(-chi_2**2/(2*sigma_observe**2))
+        particles_w[i] = 1/(np.sqrt(2*np.pi)*sigma_observe) * 
+                            np.exp(-chi_2**2/(2*sigma_observe**2))
         
     particles_w = particles_w / np.sum(particles_w)
     
@@ -546,7 +547,7 @@ We can also look at the effect of decrasing and increasing the observation uncer
   \caption{Video 3, no motion model, sigma\_obeserve 0.05 vs 1.0}
 \end{figure}
 
-Summary:
+In summary:
 \begin{itemize}
   \item Number of particles when increased makes the tracker more accurate
   since we have more samples from which apporximate the prediciton distribution
