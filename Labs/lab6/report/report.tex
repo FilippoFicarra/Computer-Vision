@@ -73,7 +73,167 @@
 
 \section{Implementation}
 In this exercise we implemented the CONDENSATION algorithm, a sampled-based solution of the recursive Bayesian filter.
+We needed to implemt 5 functions:
+\begin{itemize}
+  \item color\_histogram
+  \item propagate
+  \item observe
+  \item estimate
+  \item resample
+\end{itemize}
+All of this functions are implemented in the corresponted .py files.
+\subsection{Color histogram}
+\begin{lstlisting}[language=Python, caption=color histogram]
+  def color_histogram(xmin, ymin, xmax, ymax, frame, hist_bin):
+    bounding_box = frame[ymin:ymax, xmin:xmax]
+    hist_channels = []
+    
+    for channel in range(bounding_box.shape[2]):
+        hist, _ = np.histogram(bounding_box[:,:,channel], bins=hist_bin)
+        hist_channels.append(hist)
+        
+    histogram = np.concatenate(hist_channels)
+    norm_histogram = histogram / np.sum(histogram)
 
+    return norm_histogram
+
+\end{lstlisting}
+
+In this function I am creating for each channel (RGB)
+an histogram with hist\_bin number of bins for the pixels. What the 
+function does is to take the patch of the image described by the bounding box,
+create the histogram for each channel, concatenate and then normalize.
+
+\newpage
+
+\subsection{Propagate}
+
+\begin{lstlisting}[language=Python, caption=propagate]
+  
+  def propagate(particles, frame_height, frame_width, params):
+    delta_t = 1
+    sigma_p = params["sigma_position"]
+    sigma_v = params["sigma_velocity"]
+
+    A = np.identity(particles.shape[1])
+    model_noise_std = np.array([sigma_p, sigma_p])
+
+    if params["model"] == 1:
+        A[0, 2] = delta_t
+        A[1, 3] = delta_t
+        model_noise_std = np.array([sigma_p, sigma_p, sigma_v, sigma_v])
+
+    w = np.random.randn(particles.shape[0], particles.shape[1]) * model_noise_std
+
+
+    particles = np.matmul(particles, A.T) + w
+
+
+    particles[:, 0] = np.clip(particles[:, 0], 0, frame_width - 1)
+    particles[:, 1] = np.clip(particles[:, 1], 0, frame_height - 1)
+      
+  return particles
+
+\end{lstlisting}
+This is the pivotal function of the algorithm. Here each sample $s'_{t-1}$ 
+is propagated with the following formula: $s^{(n)}_t = As'^{(n)}_{t-1} + w^{(n)}_{t-1}$.
+First, each sample is of this form: $s=\{x, y, \dot{x}, \dot{y}\}$. The matrix 
+Thge matrix A is taken as the identity for the no motion case, or the identity 
+plus an identity with the diagonal shifted up and multiplied by dt.
+For the no motion model the sampling gives this result:
+\begin{center}
+  $A = \begin{bmatrix}
+    1 & 0\\
+    0 & 1
+  \end{bmatrix} \implies (x^{(n)}_t, y^{(n)}_t)^\top = \begin{bmatrix}
+    1 & 0\\
+    0 & 1
+  \end{bmatrix} (x^{(n)}_{t-1}, y^{(n)}_{t-1})^\top + ({\sigma_p}^{(n)}_{t-1}, {\sigma_p}^{(n)}_{t-1})^\top=$\\
+  \[
+  \begin{cases}
+    x^{(n)}_t = x^{(n)}_{t-1} + {\sigma_p}^{(n)}_{t-1}&\\
+    y^{(n)}_t = y^{(n)}_{t-1} + {\sigma_p}^{(n)}_{t-1}&
+  \end{cases}
+  \]
+\end{center}
+
+For the constant velocity we are using the following contruction:
+\begin{center}
+  $A = \begin{bmatrix}
+    1 & 0 & dt & 0\\
+    0 & 1 & 0 & dt\\
+    0 & 0 & 1 & 0\\
+    0 & 0 & 0 & 1
+  \end{bmatrix} \implies (x^{(n)}_t, y^{(n)}_t, \dot{x}^{(n)}_t, \dot{y}^{(n)}_t)^\top = \begin{bmatrix}
+    1 & 0 & dt & 0\\
+    0 & 1 & 0 & dt\\
+    0 & 0 & 1 & 0\\
+    0 & 0 & 0 & 1
+  \end{bmatrix} (x^{(n)}_{t-1}, y^{(n)}_{t-1}, \dot{x}^{(n)}_{t-1}, \dot{y}^{(n)}_{t-1})^\top + ({\sigma_p}^{(n)}_{t-1}, {\sigma_p}^{(n)}_{t-1}, {\sigma_v}^{(n)}_{t-1}, {\sigma_v}^{(n)}_{t-1})^\top=$\\
+  \[
+  \begin{cases}
+    x^{(n)}_t = x^{(n)}_{t-1} + \dot{x}^{(n)}_{t-1} dt + {\sigma_p}^{(n)}_{t-1}& \\
+    y^{(n)}_t = y^{(n)}_{t-1} + \dot{y}^{(n)}_{t-1} dt + {\sigma_p}^{(n)}_{t-1}& \\
+    \dot{x}^{(n)}_{t} = \dot{x}'^{(n)}_{t-1} + {\sigma_v}^{(n)}_{t-1} &\\
+    \dot{y}^{(n)}_{t} = \dot{y}'^{(n)}_{t-1} + {\sigma_v}^{(n)}_{t-1}
+  \end{cases}
+  \]
+\end{center}
+I assumed dt to be 1, and w is a random matrices with covariance matrix given by $\sigma_p$ and $\sigma_v$.
+At the end the particles are clipped to be in the frame.
+
+\subsection{Observe}
+\begin{lstlisting}[language=Python, caption=observe]
+  def observe(particles, frame, bbox_height, bbox_width, hist_bin, hist, sigma_observe):
+    particles_w = np.zeros(particles.shape[0])
+    for i, particle in enumerate(particles):
+        x_center = particle[0]
+        y_center = particle[1]
+        
+        x_min = np.clip(int(x_center - bbox_width/2), 0, frame.shape[1]-1)
+        y_min = np.clip(int(y_center - bbox_height/2), 0, frame.shape[0]-1)
+        x_max = np.clip(int(x_center + bbox_width/2), 0, frame.shape[1]-1)
+        y_max = np.clip(int(y_center + bbox_height/2), 0, frame.shape[0]-1)
+        
+        histogram = color_histogram(x_min, y_min, x_max, y_max, frame, hist_bin)
+        
+        chi_2 = chi2_cost(histogram, hist)
+        
+        particles_w[i] = 1/(np.sqrt(2*np.pi)*sigma_observe) * np.exp(-chi_2**2/(2*sigma_observe**2))
+        
+    particles_w = particles_w / np.sum(particles_w)
+    
+    return particles_w
+\end{lstlisting}
+
+For each particle we compute the Chi2 distance between the color histogram of the box around the particle
+and the otriginal color histogram. Then each weight is computed using the gaussian function on this Chi2 distances.
+Everything at the end is normalized to mantain this weight as probabilities.
+
+\subsection{Estimate}
+
+\begin{lstlisting}[language=Python, caption=estimate]
+  def estimate(particles, particles_w):
+    estimate = np.zeros(particles.shape[1])
+    
+    for i, particle in enumerate(particles):
+        estimate += particle * particles_w[i]
+        
+    estimate = estimate / np.sum(particles_w)
+
+    return estimate
+\end{lstlisting}
+
+This function compute the estimated particle, computing its weighted mean using the particle weights.
+
+\subsection{Resample}
+\begin{lstlisting}[language=Python, caption=resample]
+
+  def resample(particles, particles_w):
+      index = np.random.choice(particles.shape[0], particles.shape[0], p=particles_w)
+      return particles[index], particles_w[index]
+\end{lstlisting}
+With this function then we resample the particles given the weights computed in the observe function.
 \section{Results}
 
 \subsection{Video 1}
