@@ -13,9 +13,7 @@ def propagate(particles, frame_height, frame_width, params):
         A[1, 3] = delta_t
         model_noise_std = np.array([sigma_p, sigma_p, sigma_v, sigma_v])
 
-    w = np.random.randn(particles.shape[0], particles.shape[1]) * model_noise_std
-    # np.random.normal(0, model_noise_std, particles.shape)
-    
+    w = np.random.randn(particles.shape[0], particles.shape[1]) * model_noise_std    
     
     particles = np.matmul(particles, A.T) + w
     

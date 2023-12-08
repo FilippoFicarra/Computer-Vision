@@ -20,6 +20,6 @@ def observe(particles, frame, bbox_height, bbox_width, hist_bin, hist, sigma_obs
         
         particles_w[i] = 1/(np.sqrt(2*np.pi)*sigma_observe) * np.exp(-chi_2**2/(2*sigma_observe**2))
         
-    particles_w = particles_w / np.sum(particles_w) # check if right
+    particles_w = particles_w / np.sum(particles_w)
     
     return particles_w

@@ -202,9 +202,9 @@ def condensation_tracker(video_name, params):
                 to_remove.append(patch)
 
             # save frame
-            if not os.path.exists(f'frames/{video_name[:-4]}/num_particles{params["num_particles"]}_model{params["model"]}_hist_bin{params["hist_bin"]}_sigma_observe{params["sigma_observe"]}_sigma_position{params["sigma_position"]}_sigma_velocity{params["sigma_velocity"]}_initial_velocity{params["initial_velocity"][0]}-{params["initial_velocity"][1]}_alpha{params["alpha"]}'):
-                os.makedirs(f'frames/{video_name[:-4]}/num_particles{params["num_particles"]}_model{params["model"]}_hist_bin{params["hist_bin"]}_sigma_observe{params["sigma_observe"]}_sigma_position{params["sigma_position"]}_sigma_velocity{params["sigma_velocity"]}_initial_velocity{params["initial_velocity"][0]}-{params["initial_velocity"][1]}_alpha{params["alpha"]}')
-            plt.savefig(f'frames/{video_name[:-4]}/num_particles{params["num_particles"]}_model{params["model"]}_hist_bin{params["hist_bin"]}_sigma_observe{params["sigma_observe"]}_sigma_position{params["sigma_position"]}_sigma_velocity{params["sigma_velocity"]}_initial_velocity{params["initial_velocity"][0]}-{params["initial_velocity"][1]}_alpha{params["alpha"]}/{t}.png')
+            # if not os.path.exists(f'frames/{video_name[:-4]}/num_particles{params["num_particles"]}_model{params["model"]}_hist_bin{params["hist_bin"]}_sigma_observe{params["sigma_observe"]}_sigma_position{params["sigma_position"]}_sigma_velocity{params["sigma_velocity"]}_initial_velocity{params["initial_velocity"][0]}-{params["initial_velocity"][1]}_alpha{params["alpha"]}'):
+            #     os.makedirs(f'frames/{video_name[:-4]}/num_particles{params["num_particles"]}_model{params["model"]}_hist_bin{params["hist_bin"]}_sigma_observe{params["sigma_observe"]}_sigma_position{params["sigma_position"]}_sigma_velocity{params["sigma_velocity"]}_initial_velocity{params["initial_velocity"][0]}-{params["initial_velocity"][1]}_alpha{params["alpha"]}')
+            # plt.savefig(f'frames/{video_name[:-4]}/num_particles{params["num_particles"]}_model{params["model"]}_hist_bin{params["hist_bin"]}_sigma_observe{params["sigma_observe"]}_sigma_position{params["sigma_position"]}_sigma_velocity{params["sigma_velocity"]}_initial_velocity{params["initial_velocity"][0]}-{params["initial_velocity"][1]}_alpha{params["alpha"]}/{t}.png')
         # RESAMPLE PARTICLES
         # === Implement function resample() ===
         particles, particles_w = resample(particles, particles_w)
