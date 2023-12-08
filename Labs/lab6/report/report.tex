@@ -69,12 +69,333 @@
       \timestamp
       \end{center}
 
+
+
+\section{Implementation}
+In this exercise we implemented the CONDENSATION algorithm, a sampled-based solution of the recursive Bayesian filter.
+
 \section{Results}
 
 \subsection{Video 1}
 
-The algorithm works pretty well with the first video
+The algorithm works pretty well with the first video since the movement 
+is very simple and the color are pretty distinguishable. The tracker worked, in a sense, with the
+default parameters but we, as we can see in the picture below, it tended to follow the wrist and it 
+tended to loose the tracking almost at the end of the video, when the hand moved quicker.
+Below the results for the video 1 and the default parameters.
 
 
+\begin{figure}[!h]
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default/12.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default/19.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default/27.png}
+  \endminipage\space
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default/34.png}
+  \endminipage
+  \caption{Video 1 with default parameters, no motion model}
+\end{figure}
 
+If we increase more the numbers of particles we should get more 
+accurate results. As shown below the tracker gets better in the last part
+of the video when it doesn't loose the hand. One of the problem is 
+that the tracker still follows the wrist, and this can be due to the no motion
+model or the hist\_bin, since the image contains the shadow of the hand. 
+
+\begin{figure}[!h]
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_300_particles/12.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_300_particles/19.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_300_particles/27.png}
+  \endminipage\space
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_300_particles/34.png}
+  \endminipage
+  \caption{Video 1 with default parameters, no motion model, 300 particles}
+\end{figure}
+
+\newpage
+What happens if we play with other parameters like the number
+of bins? Below I show that reducing the number of hist\_bins impact
+on the tracking and make it fail. This is due to the fact that we are 
+grouping very different colors together, and this makes the algorithm 
+not robust to light changing for example.
+
+\begin{figure}[!h]
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_hist_bin8/12.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_hist_bin8/19.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_hist_bin8/27.png}
+  \endminipage\space
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_hist_bin8/34.png}
+  \endminipage
+  \caption{Video 1 with default parameters, no motion model, hist\_bin 8}
+\end{figure}
+
+\begin{figure}[!h]
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_hist_bin4/12.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_hist_bin4/19.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_hist_bin4/27.png}
+  \endminipage\space
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_hist_bin4/34.png}
+  \endminipage
+  \caption{Video 1 with default parameters, no motion model, hist\_bin 4}
+\end{figure}
+
+\newpage
+If we increase the number of hist\_bins to 32 we see
+an improvement on the tracking. The model is able to track better 
+the hand and not only the wrist. Also the model is 
+more stable to the sudden disappearance of the hand at the end.
+\begin{figure}[!h]
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_hist_bin32/12.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_hist_bin32/19.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_hist_bin32/27.png}
+  \endminipage\space
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_hist_bin32/34.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_default_hist_bin32/35.png}
+  \endminipage
+  \caption{Video 1 with default parameters, no motion model, hist\_bin 32}
+\end{figure}
+
+\newpage
+While no motion model is working, thanks also to the sigma\_position,
+the result can be improved using a constant velocity model. 
+The only parameter changed here are the initial velocity to (-1, -5) 
+,so the tracker is initialy directed to top left, and the sigma\_position
+reduced to 10.
+
+
+\begin{figure}[!h]
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_constant_velocity_sigma_position_10_initial_velocity_-1_-5/12.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_constant_velocity_sigma_position_10_initial_velocity_-1_-5/19.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_constant_velocity_sigma_position_10_initial_velocity_-1_-5/27.png}
+  \endminipage\space
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_constant_velocity_sigma_position_10_initial_velocity_-1_-5/34.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_1_constant_velocity_sigma_position_10_initial_velocity_-1_-5/35.png}
+  \endminipage
+  \caption{Video 1 with default parameters,constant velocity, initial velocity (-1, -5), sigma\_position 10}
+\end{figure}
+
+
+\subsection{Video 2}
+The second video was more complex than the first one, since there is 
+an object that performs occlusion and the background is not constant 
+as in the first video. As first model I tried the one with 
+default parameters. Below the results.
+
+\begin{figure}[!h]
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video2_default/7.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video2_default/12.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video2_default/27.png}
+  \endminipage\space
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video2_default/34.png}
+  \endminipage
+  \caption{Video 2 with default parameters, no motion model}
+\end{figure}
+
+The model almost track the hand for the whole video. As shown in the images,
+we have high inaccurancy near the obstacle, but the model is still able to 
+follow the hand.
+
+Lets now try the constant velocity. Since the object is moving right without 
+any y movement, we can set the inital velocity to (3, 0).
+
+\begin{figure}[!h]
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video2_default_constant_velocity_inital_velovity_3_0/7.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video2_default_constant_velocity_inital_velovity_3_0/12.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video2_default_constant_velocity_inital_velovity_3_0/27.png}
+  \endminipage\space
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video2_default_constant_velocity_inital_velovity_3_0/34.png}
+  \endminipage
+  \caption{Video 2 with default parameters, constant velocity model, initial velocity (3, 0)}
+\end{figure}
+
+This tracking fails, due to the occlusion. We can imporve the tracking sertting $\alpha$ to 0.5, 
+so that the color histogram is updated with with the current histogram. Despite this change
+the result are not so different from the constan motion.
+
+\begin{figure}[!h]
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_2_constant_velocity_alpha_05_initial_velocity_3_0/7.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_2_constant_velocity_alpha_05_initial_velocity_3_0/12.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_2_constant_velocity_alpha_05_initial_velocity_3_0/27.png}
+  \endminipage\space
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_2_constant_velocity_alpha_05_initial_velocity_3_0/34.png}
+  \endminipage
+  \caption{Video 2 with default parameters, constant velocity model, initial velocity (3, 0)}
+\end{figure}
+
+If we further change the parameters we can find an optimal setting for tracking. What performed best was 300 particles,
+sigma\_position = 1, sigma\_velocity = 0.1, $\alpha = 0.5$ and initial velocity (4,0).
+Below also a comparison of the result when using different sigma\_observe values.
+\newpage
+\begin{figure}[!h]
+  \minipage{0.5\textwidth}
+    \includegraphics[width=\linewidth]{images/video2_best_sigma_observe_01/34.png}
+  \endminipage
+  \minipage{0.5\textwidth}
+    \includegraphics[width=\linewidth]{images/video2_best_sigma_observe_1/34.png}
+  \endminipage
+  \caption{Best params for Video 2, sigma\_observe 0.1 vs sigma\_observe 1}
+\end{figure}
+
+The second image seem to be a better tracking, but the problem is that, due to the high observation uncertainty,
+the tracker tend to be ahead the hand and not tracking it for the middle part of the video.
+
+If we increase sigma\_position to 30, the tracking result in failure as shown in the image.
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=0.5\linewidth]{images/video2_best_sigma_position_30/28.png}
+  \caption{Best params for Video 2, sigma\_position 30}
+\end{figure}
+
+The outcome of this experiment for now tell us that:
+\begin{itemize}
+  \item Reduced system noise in the model typically leads to more confidence in the predicted motion. 
+  \item Higher system noise makes the predictions less reliable and more susceptible to errors.
+  \item Lower measurement noise implies more accurate and reliable measurements of the object's position.
+  This leads to better updates in the algorithm.
+  \item Higher measurement noise introduces more uncertainty into the measurements.
+  This makes the update less accurate.
+  \item Constant velocity is very useful when we know that the object is moving at a constant
+  velocity, since the assumption of constant velocity helps to estimate next frames in which the object
+  is more likely to appear
+\end{itemize}
+
+\newpage
+
+\subsection{Video3}
+
+I started looking at the effect of video 3 with the best parameters of the video 2.
+These are the results:
+\begin{figure}[!h]
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_3_best_param_2/2.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_3_best_param_2/8.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_3_best_param_2/18.png}
+  \endminipage\space
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_3_best_param_2/27.png}
+  \endminipage
+  \caption{Video 3 with best parameters for model 2}
+\end{figure}
+ Clearly the approach have some problems. First we notice that the initial velocity is not adequate for the 
+ video in analysis. We can impove this just increasing the velocity on the x axis to 10.
+ We see a slightly improvement on the tracking, but still the algorithm is not capable to follow the ball for the entire video.
+
+\begin{figure}[!h]
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_3_best_param_2_increased_velocity/2.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_3_best_param_2_increased_velocity/8.png}
+  \endminipage
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_3_best_param_2_increased_velocity/18.png}
+  \endminipage\space
+  \minipage{0.3\textwidth}
+    \includegraphics[width=\linewidth]{images/video_3_best_param_2_increased_velocity/27.png}
+  \endminipage
+  \caption{Video 3 with best parameters for model 2, initial velocity (10, 0)}
+\end{figure}
+
+This is because the ball changes direction suddenly, so the constant velocity is not able to follow, we can go back to the no motion model,
+but we need to increase the system noise.
+
+\begin{figure}[!h]
+  \minipage{0.5\textwidth}
+    \includegraphics[width=\linewidth]{images/video3_no_motion_position_1/25.png}
+  \endminipage
+  \minipage{0.5\textwidth}
+    \includegraphics[width=\linewidth]{images/video_3_no_motion_position_10/34.png}
+  \endminipage
+  \caption{Video 3, no motion model, sigma\_position 1 vs 10, sigma\_observe 0.1}
+\end{figure}
+
+As expected the system noise, when increased, helps tracking in a no motion model. In the first 
+image, due to the very low sigma\_position the tracker didn't move, while increasing its value 
+gave an almost perfect tracking.
+\newpage
+We can also look at the effect of decrasing and increasing the observation uncertainty.
+
+\begin{figure}[!h]
+  \minipage{0.5\textwidth}
+    \includegraphics[width=\linewidth]{images/video3_best_sigma_observe_005/34.png}
+  \endminipage
+  \minipage{0.5\textwidth}
+    \includegraphics[width=\linewidth]{images/video3_best_sigma_observe_1/34.png}
+  \endminipage
+  \caption{Video 3, no motion model, sigma\_obeserve 0.05 vs 1.0}
+\end{figure}
+
+Summary:
+\begin{itemize}
+  \item Number of particles when increased makes the tracker more accurate
+  since we have more samples from which apporximate the prediciton distribution
+  \item Increasing the number of bins in a histogram color model provides a more detailed 
+  representation of color information. This for better discrimination 
+  between different colors and shades, potentially leading to more accurate 
+  object recognition and tracking.
+  \item Allowing appearance model updating enables the tracker to adapt to 
+  changes in the object's appearance over time. This adaptation helps in 
+  handling variations in lighting conditions, occlusions etc...
+\end{itemize}
 \end{document}

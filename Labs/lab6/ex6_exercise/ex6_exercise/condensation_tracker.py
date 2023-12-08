@@ -223,7 +223,7 @@ def condensation_tracker(video_name, params):
 if __name__ == "__main__":
     video_name = 'video3.avi'
     
-    
+    # default parameters
     # params = {
     #     "draw_plots": 1,
     #     "hist_bin": 16,
@@ -236,64 +236,17 @@ if __name__ == "__main__":
     #     "initial_velocity": (1, 10)
     # }
 
-    # best parmas video 2
-    # params = {
-    #     "draw_plots": 1,
-    #     "hist_bin": 16,
-    #     "alpha": 0.5,
-    #     "sigma_observe": 0.1,
-    #     "model": 1,
-    #     "num_particles": 300,
-    #     "sigma_position": 5,
-    #     "sigma_velocity": 1,
-    #     "initial_velocity": (1, 0)
-    # }
-    # also good for video 2
-    # params = {
-    #     "draw_plots": 1,
-    #     "hist_bin": 16,
-    #     "alpha": 0.5,
-    #     "sigma_observe": 0.05,
-    #     "model": 1,
-    #     "num_particles": 300,
-    #     "sigma_position": 5,
-    #     "sigma_velocity": 1,
-    #     "initial_velocity": (1, 0)
-    # }
-    # best params video 3
-    # params = {
-    #     "draw_plots": 1,
-    #     "hist_bin": 16,
-    #     "alpha": 0.5,
-    #     "sigma_observe": 0.05,
-    #     "model": 1,
-    #     "num_particles": 300,
-    #     "sigma_position": 15,
-    #     "sigma_velocity": 1,
-    #     "initial_velocity": (1, 0)
-    # }
-    # also good for video 3
-    # params = {
-    #     "draw_plots": 1,
-    #     "hist_bin": 16,
-    #     "alpha": 0.5,
-    #     "sigma_observe": 0.1,
-    #     "model": 1,
-    #     "num_particles": 300,
-    #     "sigma_position": 15,
-    #     "sigma_velocity": 1,
-    #     "initial_velocity": (1, 0)
-    # }
+    # best parameters for video3
     params = {
         "draw_plots": 1,
         "hist_bin": 16,
         "alpha": 0.5,
-        "sigma_observe": 0.1,
-        "model": 1,
-        "num_particles": 30,
-        "sigma_position": 15,
-        "sigma_velocity": 1,
-        "initial_velocity": (1, 0)
+        "sigma_observe": 1.0,
+        "model": 0,
+        "num_particles": 300,
+        "sigma_position": 10,
+        "sigma_velocity": 0.1,
+        "initial_velocity": (10,0)
     }
 
     condensation_tracker(video_name, params)
