@@ -221,7 +221,6 @@ def TriangulateImage(K, image_name, images, registered_images, matches):
     points3D_, im1_corrs, im2_corrs = TriangulatePoints(K, image, images[registered_image], m)
     points3D = np.append(points3D, points3D_, 0)
     
-    corrs[registered_image] =  (im2_corrs, [i + offset for i in range(points3D_.shape[0])])
     corrs[image_name] = (im1_corrs, [i + offset for i in range(points3D_.shape[0])])
     
     offset += points3D_.shape[0]

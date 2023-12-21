@@ -82,9 +82,88 @@ The principal functions that had to be implemented were:
 
 \subsubsection{Essential matrix estimation}
 
+\begin{lstlisting}[language=Python, caption=homogeneous coordinate and normalizing]
+  homogeneous_kps1 = np.array([MakeHomogeneous(kp) for kp in im1.kps[matches[:,0]]])
+  homogeneous_kps2 = np.array([MakeHomogeneous(kp) for kp in im2.kps[matches[:,1]]])
+  
+  K_inv = np.linalg.inv(K)
+
+  normalized_kps1 = (K_inv @ homogeneous_kps1.T).T
+  normalized_kps2 = (K_inv @ homogeneous_kps2.T).T
+
+\end{lstlisting}
+
+In this code I went to homogeneous coordinates and then I normalized the points.
+
+\begin{lstlisting}[language=Python, caption=homogeneous coordinate and normalizing]
+
+constraint_matrix = np.zeros((matches.shape[0], 9))
+for i in range(matches.shape[0]):
+  # Add the constraints
+  x1 = normalized_kps1[i]
+  x2 = normalized_kps2[i]
+
+  for j in range(x1.shape[0]):
+    for k in range(x2.shape[0]):
+      constraint_matrix[i, j * x2.shape[0] + k] = x2[j] * x1[k]
+\end{lstlisting}
+
+The previous code was used to find the constraint matrix from 
+the formula $x_2^T E x_1 = 0$.
+
+The we need to perform svd on the constraint matrix to find
+the essential matrix imposing the first 2 singular values 
+to be 1 and the third to be 0.
+
 \subsubsection{Point triangulation}
 
+\begin{lstlisting}[language=Python, caption=point triangulation]
+  homogeneous_points3D = np.array([MakeHomogeneous(p) for p in points3D])
+  points3D_cam1 = (P1 @ homogeneous_points3D.T).T
+  indices = np.where(points3D_cam1[:,2] > 0)[0]
+  
+  
+  # Filter points behind the first camera
+  im1_corrs = im1_corrs[indices]
+  im2_corrs = im2_corrs[indices]
+  points3D = points3D[indices]
+  
+  
+  homogeneous_points3D = np.array([MakeHomogeneous(p) for p in points3D])
+  if len(homogeneous_points3D.shape) < 2: # since the last point is shaped as (0, ) instead of (0, 4)
+    homogeneous_points3D = np.reshape(homogeneous_points3D, (0, 4))
+  points3D_cam2 = (P2 @ homogeneous_points3D.T).T
+  indices = np.where(points3D_cam2[:,2] > 0)[0]
+
+  # Filter points behind the second camera
+  im1_corrs = im1_corrs[indices]
+  im2_corrs = im2_corrs[indices]
+  points3D = points3D[indices]
+
+\end{lstlisting}
+
+In this code we first compute the 3D points from the cam 1 and 2. We then filter
+the points for the one that have Z-coordinate $<$ 0, so they are behind 
+the camera.
+
 \subsubsection{Map extension}
+
+\begin{lstlisting}[language=Python, caption=Trinagulate images]
+
+  corrs = {}
+  
+  offset = 0
+  for registered_image in registered_images:
+    
+    m = GetPairMatches(image_name, registered_image, matches)
+    
+    points3D_, im1_corrs, im2_corrs = TriangulatePoints(K, image, images[registered_image], m)
+    points3D = np.append(points3D, points3D_, 0)
+    
+    corrs[image_name] = (im1_corrs, [i + offset for i in range(points3D_.shape[0])])
+    
+    offset += points3D_.shape[0]
+\end{lstlisting}
 
 \subsection{Results}
 The following imges show the result for the algorithm using all the images.
@@ -173,7 +252,7 @@ passed to a function to compute the number of outliers and their indices.
 \end{lstlisting}
 
 The inliers are computed with the following function:
-\begin{lstlisting}[language=Python, caption=RANSAC]
+\begin{lstlisting}[language=Python, caption=num\_inlier]
   def num_inlier(x,y,k,b,n_samples,thres_dist):
     num = 0
     mask = np.zeros(x.shape, dtype=bool)
