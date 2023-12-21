@@ -1,0 +1,222 @@
+\documentclass{ETHExercise}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{subfig}
+\usepackage{adjustbox}
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{capt-of}
+\usepackage{tabularx}
+\usepackage{bm}
+\usepackage{amsmath}
+\usepackage{datetime}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage[ruled,vlined]{algorithm2e}
+
+
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[L]{263-5902-00L W23 / Lab report}
+\fancyfoot[C]{\thepage}
+\fancyfoot[R]{Computer Science\\ETH Zürich}
+\renewcommand{\footrulewidth}{0.05pt}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrule}{\hrule width\textwidth height\footrulewidth \vskip 2pt}
+\newcommand{\timestamp}{\ddmmyyyydate\today \,\,- \currenttime h}
+
+\usepackage{mdframed}
+\usepackage{etoolbox}
+
+\newtoggle{showA}
+\toggletrue{showA}
+
+
+
+
+
+\hypersetup{colorlinks,urlcolor=blue}
+\lstset{
+  backgroundcolor=\color{lightgray!20},
+  basicstyle=\small\ttfamily,
+  keywordstyle=\color{blue}\ttfamily,
+  language=C,
+  numbers=left,
+  stepnumber=1,
+  tabsize=4,
+  showspaces=false,
+  showstringspaces=false,
+}
+\title{Lab 5}
+\author{Filippo Ficarra}
+\begin{document}
+
+
+\lectureheader{Prof. M. Pollefeyes}
+{}
+{\Large Computer Vision}{Fall 2023}
+\begin{center}
+    {\Huge Filippo Ficarra: Lab 7 - Structure from Motion and Line Fitting}\\
+      \quad\newline
+      fficarra@student.ethz.ch, 22--938--062.\\
+      \quad\newline
+      \timestamp
+      \end{center}
+
+
+
+\section{Structure from Motion}
+\subsection{Implementation}
+The principal functions that had to be implemented were:
+\begin{itemize}
+  \item Essential matrix estimation
+  \item Point triangulation
+  \item Map extension
+\end{itemize}
+
+\subsubsection{Essential matrix estimation}
+
+\subsubsection{Point triangulation}
+
+\subsubsection{Map extension}
+
+\subsection{Results}
+The following imges show the result for the algorithm using all the images.
+Since the last 2 images contain some points far in the background, the cloud of 
+points shows also them.
+
+\begin{figure}[!h]
+  \minipage{0.5\textwidth}
+    \includegraphics[width=1.1\linewidth]{images/Figure_10.png}
+  \endminipage
+  \minipage{0.5\textwidth}
+    \includegraphics[width=1.1\linewidth]{images/Figure_11.png}
+  \endminipage
+  \caption{Images 8 and 9 with the points in the background.}
+\end{figure}
+
+
+\begin{figure}[!h]
+  \minipage{0.5\textwidth}
+    \includegraphics[width=1.2\linewidth]{images/Figure_1_1.png}
+  \endminipage
+  \minipage{0.5\textwidth}
+    \includegraphics[width=1.2\linewidth]{images/Figure_1_2.png}
+  \endminipage\\
+  \minipage{0.5\textwidth}
+    \includegraphics[width=1.2\linewidth]{images/Figure_1_3.png}
+  \endminipage
+  \caption{Results for all the images. From top left to bottom right:
+  top-right frontal , top-frontal, back views.}
+\end{figure}
+
+\newpage
+If we remove the last two images we can clearly see the reconstruction 
+of the fountain as shown below. The construction is much more visible,
+there are less points to be considered when computing and plotting.
+
+
+\begin{figure}[!h]
+  \minipage{0.5\textwidth}
+    \includegraphics[width=\linewidth]{images/Figure_1.png}
+  \endminipage
+  \minipage{0.5\textwidth}
+    \includegraphics[width=\linewidth]{images/Figure_2.png}
+  \endminipage\\
+  \minipage{0.5\textwidth}
+    \includegraphics[width=\linewidth]{images/Figure_3.png}
+  \endminipage
+  \minipage{0.5\textwidth}
+    \includegraphics[width=\linewidth]{images/Figure_4.png}
+  \endminipage
+  \caption{Results for images 0 to 7. From top left to bottom right:
+  frontal, top-frontal, top, back views.}
+\end{figure}
+ 
+\newpage
+\section{Model Fitting}
+
+\subsection{Implementation}
+
+The main function of the algorithm is shown below. The algorithm
+basically iterate all over the number of iterations, samples a random sample of
+points and compute the least squares. The least squares coefficient are then 
+passed to a function to compute the number of outliers and their indices.
+\begin{lstlisting}[language=Python, caption=RANSAC]
+  def ransac(x,y,iter,n_samples,thres_dist,num_subset):
+    k_ransac = None
+    b_ransac = None
+    inlier_mask = None
+    best_inliers = 0
+  
+    for _ in range(iter):
+      indices = random.sample(range(n_samples), num_subset)
+    
+      k, b = least_square(x[indices], y[indices])
+    
+      num, mask = num_inlier(x, y, k, b, n_samples, thres_dist)
+      
+      if num > best_inliers:
+        best_inliers = num
+        k_ransac = k
+        b_ransac = b
+        inlier_mask = mask
+
+
+    return k_ransac, b_ransac, inlier_mask
+\end{lstlisting}
+
+The inliers are computed with the following function:
+\begin{lstlisting}[language=Python, caption=RANSAC]
+  def num_inlier(x,y,k,b,n_samples,thres_dist):
+    num = 0
+    mask = np.zeros(x.shape, dtype=bool)
+
+    # distance point line
+    line = k*x + b
+    dist = np.abs(line-y) / np.sqrt(k**2 + 1)
+
+    mask = dist < thres_dist
+  
+    num = len(dist[mask])
+
+    return num, mask
+\end{lstlisting}
+A point is considered to be inlier if the its distance from the line is less then a threshold.
+
+
+\subsection{Results}
+In this section we are going to show the result for the RANSAC algorithm.
+The value for the k and be for the 3 methods are the following:
+
+\begin{itemize}
+  \item $k_{gt} = 1,\ b_{gt} = 10$
+  \item $k_{ls} = 0.615965657875546, \ b_{ls} = 8.961727141443642$
+  \item $k_{RANSAC} = 0.9643894946568982,\ b_{RANSAC} = 9.982921294966832$
+\end{itemize}
+
+As shown above, the coefficient for the RANSAC are a very good estimation of the
+ground truth line, while the least squares is far away from the real
+line, due to the outliers present in the dataset.
+
+These are the resulting lines that you can see in the figure below:
+\begin{center}
+  $y_{gt} = x + 10$\\
+  $y_{ls} = 0.615965657875546 * x + 8.961727141443642 $\\
+  $y_{RANSAC} = 0.9643894946568982 * x + 9.982921294966832$
+\end{center}
+
+\begin{figure}[!h]
+  \includegraphics[width=\linewidth]{images/Model_fitting.png}
+  \caption{Model fitting results.}
+\end{figure}
+
+
+
+\end{document}

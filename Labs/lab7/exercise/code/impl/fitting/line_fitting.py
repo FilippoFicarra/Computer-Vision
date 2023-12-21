@@ -40,7 +40,7 @@ def ransac(x,y,iter,n_samples,thres_dist,num_subset):
 	best_inliers = 0
  
 	for _ in range(iter):
-		indices = random.sample(range(len(x)), num_subset)
+		indices = random.sample(range(n_samples), num_subset)
 	
 		k, b = least_square(x[indices], y[indices])
 	
