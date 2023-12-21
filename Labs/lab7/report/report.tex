@@ -130,7 +130,7 @@ to be 1 and the third to be 0.
   
   
   homogeneous_points3D = np.array([MakeHomogeneous(p) for p in points3D])
-  if len(homogeneous_points3D.shape) < 2: # since the last point is shaped as (0, ) instead of (0, 4)
+  if len(homogeneous_points3D.shape) < 2:
     homogeneous_points3D = np.reshape(homogeneous_points3D, (0, 4))
   points3D_cam2 = (P2 @ homogeneous_points3D.T).T
   indices = np.where(points3D_cam2[:,2] > 0)[0]
@@ -165,6 +165,11 @@ the camera.
     offset += points3D_.shape[0]
 \end{lstlisting}
 
+In this code we iterate over all the registered images and we triangulate the points
+between the current image and the registered one. We then append the points to the
+points3D array and we save the correspondences between the current image and the
+registered one.
+
 \subsection{Results}
 The following imges show the result for the algorithm using all the images.
 Since the last 2 images contain some points far in the background, the cloud of 
@@ -172,10 +177,10 @@ points shows also them.
 
 \begin{figure}[!h]
   \minipage{0.5\textwidth}
-    \includegraphics[width=1.1\linewidth]{images/Figure_10.png}
+    \includegraphics[width=\linewidth]{images/Figure_10.png}
   \endminipage
   \minipage{0.5\textwidth}
-    \includegraphics[width=1.1\linewidth]{images/Figure_11.png}
+    \includegraphics[width=\linewidth]{images/Figure_11.png}
   \endminipage
   \caption{Images 8 and 9 with the points in the background.}
 \end{figure}
@@ -183,13 +188,13 @@ points shows also them.
 
 \begin{figure}[!h]
   \minipage{0.5\textwidth}
-    \includegraphics[width=1.2\linewidth]{images/Figure_1_1.png}
+    \includegraphics[width=1\linewidth]{images/Figure_1_1.png}
   \endminipage
   \minipage{0.5\textwidth}
     \includegraphics[width=1.2\linewidth]{images/Figure_1_2.png}
   \endminipage\\
   \minipage{0.5\textwidth}
-    \includegraphics[width=1.2\linewidth]{images/Figure_1_3.png}
+    \includegraphics[width=1\linewidth]{images/Figure_1_3.png}
   \endminipage
   \caption{Results for all the images. From top left to bottom right:
   top-right frontal , top-frontal, back views.}
