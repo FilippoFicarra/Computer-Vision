@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Homebrew) (preloaded format=pdflatex 2023.6.22)  22 DEC 2023 00:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Homebrew) (preloaded format=pdflatex 2023.6.22)  22 DEC 2023 17:28
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -747,42 +747,47 @@ Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on in
  [1
 
 {/opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/map/pdftex/updmap/pdftex.map}{/opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc} <./ethlogo.pdf>]
-Overfull \hbox (32.4944pt too wide) in paragraph at lines 160--161
+Overfull \hbox (32.4944pt too wide) in paragraph at lines 151--152
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-<images/Figure_10.png, id=81, 462.528pt x 346.896pt>
+
+Overfull \hbox (9.81447pt too wide) in paragraph at lines 155--156
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+<images/Figure_10.png, id=77, 462.528pt x 346.896pt>
 File: images/Figure_10.png Graphic file (type png)
 <use images/Figure_10.png>
-Package pdftex.def Info: images/Figure_10.png  used on input line 180.
+Package pdftex.def Info: images/Figure_10.png  used on input line 173.
 (pdftex.def)             Requested size: 250.24199pt x 187.68098pt.
-<images/Figure_11.png, id=83, 462.528pt x 346.896pt>
+<images/Figure_11.png, id=79, 462.528pt x 346.896pt>
 File: images/Figure_11.png Graphic file (type png)
 <use images/Figure_11.png>
-Package pdftex.def Info: images/Figure_11.png  used on input line 183.
+Package pdftex.def Info: images/Figure_11.png  used on input line 176.
 (pdftex.def)             Requested size: 250.24199pt x 187.68098pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<images/Figure_1_1.png, id=84, 462.528pt x 346.896pt>
+<images/Figure_1_1.png, id=80, 462.528pt x 346.896pt>
 File: images/Figure_1_1.png Graphic file (type png)
 <use images/Figure_1_1.png>
-Package pdftex.def Info: images/Figure_1_1.png  used on input line 191.
+Package pdftex.def Info: images/Figure_1_1.png  used on input line 184.
 (pdftex.def)             Requested size: 250.24199pt x 187.68098pt.
-<images/Figure_1_2.png, id=85, 462.528pt x 346.896pt>
+<images/Figure_1_2.png, id=81, 462.528pt x 346.896pt>
 File: images/Figure_1_2.png Graphic file (type png)
 <use images/Figure_1_2.png>
-Package pdftex.def Info: images/Figure_1_2.png  used on input line 194.
+Package pdftex.def Info: images/Figure_1_2.png  used on input line 187.
 (pdftex.def)             Requested size: 300.28961pt x 225.22565pt.
 
-Overfull \hbox (50.04762pt too wide) in paragraph at lines 194--195
+Overfull \hbox (50.04762pt too wide) in paragraph at lines 187--188
 [][] 
  []
 
-<images/Figure_1_3.png, id=86, 462.528pt x 346.896pt>
+<images/Figure_1_3.png, id=82, 462.528pt x 346.896pt>
 File: images/Figure_1_3.png Graphic file (type png)
 <use images/Figure_1_3.png>
-Package pdftex.def Info: images/Figure_1_3.png  used on input line 197.
+Package pdftex.def Info: images/Figure_1_3.png  used on input line 190.
 (pdftex.def)             Requested size: 250.24199pt x 187.68098pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -795,49 +800,49 @@ LaTeX Warning: Text page 3 contains only floats.
 Overfull \vbox (0.42863pt too high) has occurred while \output is active []
 
  [3 <./images/Figure_10.png> <./images/Figure_11.png> <./images/Figure_1_1.png> <./images/Figure_1_2.png> <./images/Figure_1_3.png>]
-<images/Figure_1.png, id=139, 462.528pt x 346.896pt>
+<images/Figure_1.png, id=130, 462.528pt x 346.896pt>
 File: images/Figure_1.png Graphic file (type png)
 <use images/Figure_1.png>
-Package pdftex.def Info: images/Figure_1.png  used on input line 211.
+Package pdftex.def Info: images/Figure_1.png  used on input line 204.
 (pdftex.def)             Requested size: 250.24199pt x 187.68098pt.
-<images/Figure_2.png, id=140, 462.528pt x 346.896pt>
+<images/Figure_2.png, id=131, 462.528pt x 346.896pt>
 File: images/Figure_2.png Graphic file (type png)
 <use images/Figure_2.png>
-Package pdftex.def Info: images/Figure_2.png  used on input line 214.
+Package pdftex.def Info: images/Figure_2.png  used on input line 207.
 (pdftex.def)             Requested size: 250.24199pt x 187.68098pt.
-<images/Figure_3.png, id=141, 462.528pt x 346.896pt>
+<images/Figure_3.png, id=132, 462.528pt x 346.896pt>
 File: images/Figure_3.png Graphic file (type png)
 <use images/Figure_3.png>
-Package pdftex.def Info: images/Figure_3.png  used on input line 217.
+Package pdftex.def Info: images/Figure_3.png  used on input line 210.
 (pdftex.def)             Requested size: 250.24199pt x 187.68098pt.
-<images/Figure_4.png, id=142, 462.528pt x 346.896pt>
+<images/Figure_4.png, id=133, 462.528pt x 346.896pt>
 File: images/Figure_4.png Graphic file (type png)
 <use images/Figure_4.png>
-Package pdftex.def Info: images/Figure_4.png  used on input line 220.
+Package pdftex.def Info: images/Figure_4.png  used on input line 213.
 (pdftex.def)             Requested size: 250.24199pt x 187.68098pt.
  [4 <./images/Figure_1.png> <./images/Figure_2.png> <./images/Figure_3.png> <./images/Figure_4.png>] [5]
-<images/Model_fitting.png, id=193, 462.528pt x 346.896pt>
+<images/Model_fitting.png, id=185, 462.528pt x 346.896pt>
 File: images/Model_fitting.png Graphic file (type png)
 <use images/Model_fitting.png>
-Package pdftex.def Info: images/Model_fitting.png  used on input line 300.
+Package pdftex.def Info: images/Model_fitting.png  used on input line 293.
 (pdftex.def)             Requested size: 500.484pt x 375.38313pt.
  [6 <./images/Model_fitting.png>] (./report.aux)
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 9EBE48D10974D941A0FD5DA724903CC8;1211.
  ) 
 Here is how much of TeX's memory you used:
- 18566 strings out of 476025
- 308310 string characters out of 5779036
- 1902388 words of memory out of 5000000
- 38618 multiletter control sequences out of 15000+600000
+ 18562 strings out of 476025
+ 308314 string characters out of 5779036
+ 1896388 words of memory out of 5000000
+ 38622 multiletter control sequences out of 15000+600000
  519827 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,12n,80p,1081b,2075s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb></opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on report.pdf (6 pages, 1094323 bytes).
+Output written on report.pdf (6 pages, 1080448 bytes).
 PDF statistics:
- 291 PDF objects out of 1000 (max. 8388607)
- 229 compressed objects within 3 object streams
- 112 named destinations out of 1000 (max. 500000)
+ 281 PDF objects out of 1000 (max. 8388607)
+ 219 compressed objects within 3 object streams
+ 104 named destinations out of 1000 (max. 500000)
  128 words of extra memory for PDF output out of 10000 (max. 10000000)
 

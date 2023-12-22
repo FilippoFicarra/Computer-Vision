@@ -26,12 +26,10 @@ def EstimateEssentialMatrix(K, im1, im2, matches):
   constraint_matrix = np.zeros((matches.shape[0], 9))
   for i in range(matches.shape[0]):
     # Add the constraints
-    x1 = normalized_kps1[i]
-    x2 = normalized_kps2[i]
-
-    for j in range(x1.shape[0]):
-      for k in range(x2.shape[0]):
-        constraint_matrix[i, j * x2.shape[0] + k] = x2[j] * x1[k]
+  
+    for j in range(normalized_kps1[i].shape[0]):
+      for k in range(normalized_kps2[i].shape[0]):
+        constraint_matrix[i, j * normalized_kps2[i].shape[0] + k] = normalized_kps2[i,j] * normalized_kps1[i,k]
 
     
   # Solve for the nullspace of the constraint matrix
@@ -144,27 +142,16 @@ def TriangulatePoints(K, im1, im2, matches):
   
   homogeneous_points3D = np.array([MakeHomogeneous(p) for p in points3D])
   points3D_cam1 = (P1 @ homogeneous_points3D.T).T
-  indices = np.where(points3D_cam1[:,2] > 0)[0]
-  
-  
-  # Filter points behind the first camera
-  im1_corrs = im1_corrs[indices]
-  im2_corrs = im2_corrs[indices]
-  points3D = points3D[indices]
-  
-  
-  homogeneous_points3D = np.array([MakeHomogeneous(p) for p in points3D])
-  if len(homogeneous_points3D.shape) < 2: # since the last point is shaped as (0, ) instead of (0, 4)
-    homogeneous_points3D = np.reshape(homogeneous_points3D, (0, 4))
   points3D_cam2 = (P2 @ homogeneous_points3D.T).T
-  indices = np.where(points3D_cam2[:,2] > 0)[0]
+  
+  indices_cam_1 = np.where(points3D_cam1[:,2] > 0)[0]
+  indices_cam_2 = np.where(points3D_cam2[:,2] > 0)[0]
+  
+  
+  indices = np.intersect1d(indices_cam_1, indices_cam_2)
+  
 
-  # Filter points behind the second camera
-  im1_corrs = im1_corrs[indices]
-  im2_corrs = im2_corrs[indices]
-  points3D = points3D[indices]
-
-  return points3D, im1_corrs, im2_corrs
+  return points3D[indices], im1_corrs[indices], im2_corrs[indices]
 
 def EstimateImagePose(points2D, points3D, K):  
 
@@ -214,19 +201,22 @@ def TriangulateImage(K, image_name, images, registered_images, matches):
   corrs = {}
   
   offset = 0
+  indices = []
+  im1_corrs_array = np.array([])
+  
   for registered_image in registered_images:
     
     m = GetPairMatches(image_name, registered_image, matches)
     
     points3D_, im1_corrs, im2_corrs = TriangulatePoints(K, image, images[registered_image], m)
     points3D = np.append(points3D, points3D_, 0)
-    
-    corrs[image_name] = (im1_corrs, [i + offset for i in range(points3D_.shape[0])])
-    
+    im1_corrs_array = np.append(im1_corrs_array, im1_corrs, 0)
+    indices.extend([i + offset for i in range(points3D_.shape[0])])
+    corrs[registered_image] = (im2_corrs, [i + offset for i in range(points3D_.shape[0])])
     offset += points3D_.shape[0]
-
     
-  
+  corrs[image_name] = (im1_corrs_array, indices)
+
   
   return points3D, corrs
   

@@ -19,7 +19,7 @@ def num_inlier(x,y,k,b,n_samples,thres_dist):
 	# TODO
 	# compute the number of inliers and a mask that denotes the indices of inliers
 	num = 0
-	mask = np.zeros(x.shape, dtype=bool)
+	mask = np.zeros(n_samples, dtype=bool)
 
 	# distance point line
 	line = k*x + b

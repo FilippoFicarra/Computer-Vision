@@ -23,9 +23,9 @@ def main():
     '0004.png',
     '0005.png',
     '0006.png',
-    '0007.png',]
-    # '0008.png',
-    # '0009.png']
+    '0007.png',
+    '0008.png',
+    '0009.png']
 
   # Read images
   images = {}

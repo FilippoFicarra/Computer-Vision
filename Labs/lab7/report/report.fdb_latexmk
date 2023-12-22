@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1703200066 "/Users/filippoficarra/Documents/GitHub/Computer-Vision/Labs/lab7/report/report.tex" "report.pdf" "report" 1703200067 0
-  "/Users/filippoficarra/Documents/GitHub/Computer-Vision/Labs/lab7/report/report.tex" 1703200065 8914 9ff2bd485586e9def510b715fe563179 ""
+["pdflatex"] 1703262520 "/Users/filippoficarra/Documents/GitHub/Computer-Vision/Labs/lab7/report/report.tex" "report.pdf" "report" 1703262521 0
+  "/Users/filippoficarra/Documents/GitHub/Computer-Vision/Labs/lab7/report/report.tex" 1703262468 8825 6a975d5f35c0a920d4eb8a2bb216f166 ""
   "/opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1678549815 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/map/fontname/texfonts.map" 1678549815 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/opt/homebrew/Cellar/texlive/20230313_2/share/texmf-dist/fonts/map/pdftex/updmap/pdftex.map" 1678549815 4609045 74543da1ab9350ba886fce0af49a2cfd ""
@@ -144,16 +144,16 @@
   "images/Figure_1.png" 1703198468 42468 9161d460c4714856a1c7f5d58d3ba45a ""
   "images/Figure_10.png" 1703187116 298876 45841e621b4391d9f8b277c1661fe2f0 ""
   "images/Figure_11.png" 1703178564 319365 af559f5c0d51360e49a9a3ef56094bf5 ""
-  "images/Figure_1_1.png" 1703198297 36400 d5d9361b7c8c217f3e8cefda22095b4e ""
-  "images/Figure_1_2.png" 1703198319 22154 aa7bf4976ba23abd607632411bfec9a6 ""
-  "images/Figure_1_3.png" 1703198387 33080 80d806559c45419a95e8ef40222f1120 ""
+  "images/Figure_1_1.png" 1703262464 23959 e2384997c0551d0215561a30798d0914 ""
+  "images/Figure_1_2.png" 1703262489 26366 6ced4796a8c679cf3b20519a7b01ebbe ""
+  "images/Figure_1_3.png" 1703262519 28982 f0784363f8b3027b2bd47e658abe4a0f ""
   "images/Figure_2.png" 1703198498 49528 2ee7c176f78ae0ee7ab289fce973c342 ""
   "images/Figure_3.png" 1703198524 27165 974f6f389bce68978d488eb5e7be3995 ""
   "images/Figure_4.png" 1703198586 39267 0f4b74237b5037bb5bba397f937c95a6 ""
   "images/Model_fitting.png" 1703187911 40385 abf132c0d5625c0dd4637f2da91e207f ""
-  "report.aux" 1703200066 3352 21b61863c4d3386669c21231624cc8c1 "pdflatex"
-  "report.out" 1703200066 1211 9ebe48d10974d941a0fd5da724903cc8 "pdflatex"
-  "report.tex" 1703200065 8914 9ff2bd485586e9def510b715fe563179 ""
+  "report.aux" 1703262521 3331 c282ded1cb552abe6ac4fde1d3c2ed96 "pdflatex"
+  "report.out" 1703262521 1211 9ebe48d10974d941a0fd5da724903cc8 "pdflatex"
+  "report.tex" 1703262468 8825 6a975d5f35c0a920d4eb8a2bb216f166 ""
   (generated)
   "report.aux"
   "report.log"
